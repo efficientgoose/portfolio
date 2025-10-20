@@ -47,10 +47,10 @@ export default function Hero({ onTerminalToggle }) {
           <div className="flex gap-3 mt-6 mb-8">
             <a
               href="#contact"
-              className="px-5 py-2 bg-green-500/10 border border-green-500/30 text-green-400 text-sm rounded hover:bg-green-500/20 transition-all flex items-center gap-2git "
+              className="px-5 py-2 bg-green-500/10 border border-green-500/30 text-green-400 text-sm rounded hover:bg-green-500/20 transition-all flex items-center gap-2"
             >
               <Mail size={14} />
-              Contact
+              <span>Contact</span>
             </a>
 
             <a
