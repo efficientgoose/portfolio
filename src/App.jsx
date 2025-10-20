@@ -1,0 +1,57 @@
+import React from "react";
+import Navigation from "./components/layout/Navigation";
+import Footer from "./components/layout/Footer";
+import Hero from "./components/sections/Hero";
+import Skills from "./components/sections/Skills";
+import Experience from "./components/sections/Experience";
+import Projects from "./components/sections/Projects";
+import Contact from "./components/sections/Contact";
+import Terminal from "./components/terminal/Terminal";
+import BackgroundEffects from "./components/effects/BackgroundEffects";
+import { useTerminal } from "./hooks/useTerminal";
+
+export default function Portfolio() {
+  const {
+    terminalOpen,
+    setTerminalOpen,
+    terminalHistory,
+    currentCommand,
+    setCurrentCommand,
+    executeCommand,
+    terminalEndRef,
+  } = useTerminal();
+
+  return (
+    <div className="min-h-screen bg-black text-gray-300 font-mono relative overflow-hidden">
+      <style>{`
+        html { scroll-behavior: smooth; }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+        }
+      `}</style>
+
+      <BackgroundEffects />
+
+      <div className="relative z-10">
+        <Navigation onTerminalToggle={() => setTerminalOpen(!terminalOpen)} />
+        <Hero onTerminalToggle={() => setTerminalOpen(!terminalOpen)} />
+        <Skills />
+        <Experience />
+        <Projects />
+        <Contact />
+        <Footer />
+      </div>
+
+      <Terminal
+        terminalOpen={terminalOpen}
+        setTerminalOpen={setTerminalOpen}
+        terminalHistory={terminalHistory}
+        currentCommand={currentCommand}
+        setCurrentCommand={setCurrentCommand}
+        executeCommand={executeCommand}
+        terminalEndRef={terminalEndRef}
+      />
+    </div>
+  );
+}
