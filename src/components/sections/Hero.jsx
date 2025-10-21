@@ -135,7 +135,7 @@ export default function Hero({ onTerminalToggle }) {
     >
       <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div>
-          <div className="mb-4 flex flex-col gap-2">
+          <div className="mb-4 flex flex-col gap-4">
             <div
               className={`text-sm ${
                 textColorClasses[currentMessage.color]
@@ -269,7 +269,7 @@ export default function Hero({ onTerminalToggle }) {
             </a>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             <div className="bg-white/5 border border-gray-800 rounded p-4 flex flex-col gap-1">
               <div className="flex gap-2 items-center">
                 <div className="relative w-2 h-2">
@@ -306,7 +306,7 @@ export default function Hero({ onTerminalToggle }) {
 
               <div className="text-xs text-gray-500">Weekends</div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className="relative h-[500px] flex items-center justify-center">
