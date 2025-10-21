@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Terminal, ExternalLink, Github, Linkedin, Mail } from "lucide-react";
+import {
+  Terminal,
+  ExternalLink,
+  Github,
+  Linkedin,
+  Mail,
+  Volume2,
+} from "lucide-react";
 
 const TypewriterText = ({
   text,
   speed = 60,
   onComplete,
   displayDuration = 1500,
-  cursorColor = "gray-500", // Add cursor color prop
+  cursorColor = "gray-500",
 }) => {
   const [displayedText, setDisplayedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -128,6 +135,11 @@ export default function Hero({ onTerminalToggle }) {
     yellow: "yellow-400",
   };
 
+  const playNamePronunciation = () => {
+    const audio = new Audio("/name-pronunciation.mp3");
+    audio.play();
+  };
+
   return (
     <section
       id="about"
@@ -150,9 +162,31 @@ export default function Hero({ onTerminalToggle }) {
                 cursorColor={cursorColorClasses[currentMessage.color]}
               />
             </div>
-            <h1 className="text-5xl font-bold mb-2 bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">
-              Ajinkya Kale
-            </h1>
+            <div className="flex items-center gap-3">
+              <h1 className="text-5xl font-bold mb-2 bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">
+                Ajinkya Kale
+              </h1>
+              <div className="relative group">
+                <button
+                  onClick={playNamePronunciation}
+                  className="mb-2 text-green-400 hover:text-green-300 transition-all hover:scale-110"
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.filter =
+                      "drop-shadow(0 0 8px rgba(74, 222, 128, 0.8)) drop-shadow(0 0 16px rgba(74, 222, 128, 0.5))";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.filter = "none";
+                  }}
+                  aria-label="Listen to name pronunciation"
+                >
+                  <Volume2 size={20} />
+                </button>
+                <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 px-3 py-2 bg-gray-950 border border-green-500/30 text-green-400 text-xs font-mono rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all shadow-[0_0_15px_rgba(74,222,128,0.2)]">
+                  Or just call me AJ :)
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-[1px] w-2 h-2 rotate-45 bg-gray-950 border-r border-b border-green-500/30"></div>
+                </div>
+              </div>
+            </div>
             <div className="flex">
               <div className="text-xl text-gray-400 mb-1">
                 Backend Developer
@@ -269,6 +303,7 @@ export default function Hero({ onTerminalToggle }) {
             </a>
           </div>
 
+          {/* TODO: Add something better than this -- it's too cringe */}
           {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             <div className="bg-white/5 border border-gray-800 rounded p-4 flex flex-col gap-1">
               <div className="flex gap-2 items-center">
