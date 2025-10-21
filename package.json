@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@lottiefiles/dotlottie-react": "^0.17.5",
+    "lottie-react": "^2.4.1",
     "lucide-react": "^0.546.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"

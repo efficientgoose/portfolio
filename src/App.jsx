@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navigation from "./components/layout/Navigation";
 import Footer from "./components/layout/Footer";
 import Hero from "./components/sections/Hero";
@@ -9,6 +9,7 @@ import Contact from "./components/sections/Contact";
 import Terminal from "./components/terminal/Terminal";
 import BackgroundEffects from "./components/effects/BackgroundEffects";
 import { useTerminal } from "./hooks/useTerminal";
+import LoadingScreen from "./components/effects/LoadingScreen";
 
 export default function Portfolio() {
   const {
@@ -20,6 +21,20 @@ export default function Portfolio() {
     executeCommand,
     terminalEndRef,
   } = useTerminal();
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div className="min-h-screen bg-black text-gray-300 font-mono relative overflow-hidden">
@@ -55,3 +70,5 @@ export default function Portfolio() {
     </div>
   );
 }
+
+

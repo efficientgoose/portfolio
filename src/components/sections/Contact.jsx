@@ -14,7 +14,15 @@ export default function Contact() {
           <div className="space-y-4">
             <a
               href="mailto:ajinkode@gmail.com"
-              className="flex items-center gap-3 text-sm text-gray-400 hover:text-green-400 transition-colors group"
+              className="flex items-center gap-3 text-sm text-gray-400 hover:text-green-400 transition-all duration-300 group"
+              style={{ transition: "all 0.3s ease" }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.textShadow =
+                  "0 0 12px rgba(74, 222, 128, 1), 0 0 25px rgba(74, 222, 128, 0.7), 0 0 40px rgba(74, 222, 128, 0.4)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.textShadow = "none";
+              }}
             >
               <Mail size={16} className="text-green-400" />
               <span>ajinkode@gmail.com</span>
@@ -28,7 +36,15 @@ export default function Contact() {
               href="https://github.com/efficientgoose"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 text-sm text-gray-400 hover:text-green-400 transition-colors group"
+              className="flex items-center gap-3 text-sm text-gray-400 hover:text-green-400 transition-all duration-300 group"
+              style={{ transition: "all 0.3s ease" }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.textShadow =
+                  "0 0 12px rgba(74, 222, 128, 1), 0 0 25px rgba(74, 222, 128, 0.7), 0 0 40px rgba(74, 222, 128, 0.4)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.textShadow = "none";
+              }}
             >
               <Github size={16} className="text-green-400" />
               <span>github.com/efficientgoose</span>
@@ -42,7 +58,15 @@ export default function Contact() {
               href="https://linkedin.com/in/ajinkode"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 text-sm text-gray-400 hover:text-green-400 transition-colors group"
+              className="flex items-center gap-3 text-sm text-gray-400 hover:text-green-400 transition-all duration-300 group"
+              style={{ transition: "all 0.3s ease" }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.textShadow =
+                  "0 0 12px rgba(74, 222, 128, 1), 0 0 25px rgba(74, 222, 128, 0.7), 0 0 40px rgba(74, 222, 128, 0.4)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.textShadow = "none";
+              }}
             >
               <Linkedin size={16} className="text-green-400" />
               <span>linkedin.com/in/ajinkode</span>
