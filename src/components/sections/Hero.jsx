@@ -1,5 +1,77 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Terminal, ExternalLink, Github, Linkedin, Mail } from "lucide-react";
+
+const TypewriterText = ({
+  text,
+  speed = 60,
+  onComplete,
+  displayDuration = 1500,
+  cursorColor = "gray-500", // Add cursor color prop
+}) => {
+  const [displayedText, setDisplayedText] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (currentIndex < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedText((prev) => prev + text[currentIndex]);
+        setCurrentIndex((prev) => prev + 1);
+      }, speed);
+      return () => clearTimeout(timeout);
+    } else if (onComplete) {
+      const timeout = setTimeout(() => {
+        onComplete();
+      }, displayDuration);
+      return () => clearTimeout(timeout);
+    }
+  }, [currentIndex, text, speed, onComplete, displayDuration]);
+
+  useEffect(() => {
+    setDisplayedText("");
+    setCurrentIndex(0);
+  }, [text]);
+
+  return (
+    <span className="tracking-wider">
+      {displayedText}
+      <span
+        className={`inline-block w-1.5 h-3.5 bg-${cursorColor} ml-0.5 translate-y-[1.7px] animate-[blink_1s_step-end_infinite]`}
+      ></span>
+      <style>{`
+        @keyframes blink {
+          0%,
+          49% {
+            opacity: 1;
+          }
+          50%,
+          100% {
+            opacity: 0;
+          }
+        }
+      `}</style>
+    </span>
+  );
+};
+
+const StatusIndicator = ({ color = "green" }) => {
+  const colorClasses = {
+    green: "bg-green-400",
+    cyan: "bg-cyan-400",
+    orange: "bg-orange-400",
+    yellow: "bg-yellow-400",
+  };
+
+  return (
+    <div className="relative w-2 h-2">
+      <div
+        className={`absolute w-2 h-2 rounded-full ${colorClasses[color]} animate-ping`}
+      ></div>
+      <div
+        className={`absolute w-2 h-2 rounded-full ${colorClasses[color]}`}
+      ></div>
+    </div>
+  );
+};
 
 export default function Hero({ onTerminalToggle }) {
   useEffect(() => {
@@ -21,6 +93,41 @@ export default function Hero({ onTerminalToggle }) {
     );
   }, []);
 
+  const [messageIndex, setMessageIndex] = useState(0);
+
+  const messages = [
+    { text: "LOADING_MODULES", color: "orange", duration: 2000 },
+    { text: "INITIALIZING_PROTOCOLS", color: "cyan", duration: 2000 },
+    { text: "ALL_SYSTEMS_OPERATIONAL", color: "green", duration: 10000 },
+    { text: "CHECKING_HEALTH_STATUS", color: "yellow", duration: 2000 },
+    { text: "ALL_SYSTEMS_OPERATIONAL", color: "green", duration: 10000 },
+  ];
+
+  const currentMessage = messages[messageIndex];
+
+  const handleComplete = () => {
+    setMessageIndex((prev) => {
+      if (prev === messages.length - 1) {
+        return 3;
+      }
+      return prev + 1;
+    });
+  };
+
+  const textColorClasses = {
+    green: "text-green-400",
+    cyan: "text-cyan-400",
+    orange: "text-orange-400",
+    yellow: "text-yellow-400",
+  };
+
+  const cursorColorClasses = {
+    green: "green-400",
+    cyan: "cyan-400",
+    orange: "orange-400",
+    yellow: "yellow-400",
+  };
+
   return (
     <section
       id="about"
@@ -29,12 +136,19 @@ export default function Hero({ onTerminalToggle }) {
       <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div>
           <div className="mb-4 flex flex-col gap-2">
-            <div className="text-sm text-green-400 mb-2 flex items-center gap-2">
-              <div className="relative w-2 h-2">
-                <div className="absolute w-2 h-2 rounded-full bg-green-400 animate-ping"></div>
-                <div className="absolute w-2 h-2 rounded-full bg-green-400"></div>
-              </div>
-              <span>SYSTEM_ONLINE</span>
+            <div
+              className={`text-sm ${
+                textColorClasses[currentMessage.color]
+              } mb-2 flex items-center gap-2 font-mono`}
+            >
+              <StatusIndicator color={currentMessage.color} />
+              <TypewriterText
+                text={currentMessage.text}
+                speed={60}
+                displayDuration={currentMessage.duration}
+                onComplete={handleComplete}
+                cursorColor={cursorColorClasses[currentMessage.color]}
+              />
             </div>
             <h1 className="text-5xl font-bold mb-2 bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">
               Ajinkya Kale
