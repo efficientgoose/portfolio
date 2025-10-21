@@ -313,12 +313,9 @@ export default function Hero({ onTerminalToggle }) {
         <div className="relative h-[500px] flex items-center justify-center">
           <div className="relative z-10 w-64 h-80 bg-gradient-to-br from-green-500/20 to-cyan-500/20 border border-green-500/30 rounded-lg overflow-hidden shadow-2xl shadow-green-500/20">
             <img
-              src="/Main.jpeg"
+              src="/Main.jpg"
               alt="Ajinkya Kale"
               className="w-full h-full object-cover"
-              style={{
-                filter: "sepia(0.3) hue-rotate(60deg) saturate(1.2)",
-              }}
             />
           </div>
 
@@ -327,9 +324,6 @@ export default function Hero({ onTerminalToggle }) {
               src="/Left.png"
               alt="Left Pic"
               className="w-full h-full object-cover"
-              style={{
-                filter: "sepia(0.3) hue-rotate(60deg) saturate(1.2)",
-              }}
             />
           </div>
 
@@ -338,9 +332,6 @@ export default function Hero({ onTerminalToggle }) {
               src="/Bottom-Right.jpg"
               alt="Bottom Right pic"
               className="w-full h-full object-cover"
-              style={{
-                filter: "sepia(0.3) hue-rotate(60deg) saturate(1.2)",
-              }}
             />
           </div>
         </div>
