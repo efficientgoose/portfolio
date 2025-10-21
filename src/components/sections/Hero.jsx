@@ -162,7 +162,7 @@ export default function Hero({ onTerminalToggle }) {
                 cursorColor={cursorColorClasses[currentMessage.color]}
               />
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1 sm:gap-2 md:gap-4">
               <h1 className="text-5xl font-bold mb-2 bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">
                 Ajinkya Kale
               </h1>
