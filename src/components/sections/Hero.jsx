@@ -104,10 +104,10 @@ export default function Hero({ onTerminalToggle }) {
   const [messageIndex, setMessageIndex] = useState(0);
 
   const messages = [
-    { text: "LOADING_MODULES", color: "orange", duration: 2000 },
-    { text: "INITIALIZING_PROTOCOLS", color: "cyan", duration: 2000 },
+    { text: "LOADING_MODULES...", color: "orange", duration: 2000 },
+    { text: "INITIALIZING_PROTOCOLS...", color: "cyan", duration: 2000 },
     { text: "ALL_SYSTEMS_OPERATIONAL", color: "green", duration: 10000 },
-    { text: "CHECKING_HEALTH_STATUS", color: "yellow", duration: 2000 },
+    { text: "CHECKING_HEALTH_STATUS...", color: "yellow", duration: 2000 },
     { text: "ALL_SYSTEMS_OPERATIONAL", color: "green", duration: 10000 },
   ];
 
@@ -240,10 +240,8 @@ export default function Hero({ onTerminalToggle }) {
               </div>
 
               <div className="text-sm text-gray-500 max-w-xl">
-                <p>Just a laptop, Wi-Fi, and a knack for scalable systems.</p>
-                <p>
-                  Building reliable backends that quietly do the heavy lifting.
-                </p>
+                <p>Just a laptop, Wi-Fi, and a passion for building things.</p>
+                <p>Turning coffee into code, bugs into features. </p>
               </div>
             </div>
 
