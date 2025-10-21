@@ -309,9 +309,8 @@ export default function Hero({ onTerminalToggle }) {
           </div>
         </div>
 
-        {/* Right Column - Images */}
         <div className="relative h-[500px] flex items-center justify-center">
-          <div className="relative z-10 w-64 h-80 bg-gradient-to-br from-green-500/20 to-cyan-500/20 border border-green-500/30 rounded-lg overflow-hidden shadow-2xl shadow-green-500/20">
+          <div className="relative z-10 w-64 h-80 bg-gradient-to-br border-2 border-white rounded-lg overflow-hidden shadow-2xl shadow-green-500/20 transition-all duration-300 hover:border-amber-300/70 hover:shadow-[0_0_18px_rgba(251,146,60,0.35),0_0_35px_rgba(251,146,60,0.2),0_0_50px_rgba(251,146,60,0.1)] hover:cursor-pointer">
             <img
               src="/Main.jpg"
               alt="Ajinkya Kale"
@@ -319,19 +318,19 @@ export default function Hero({ onTerminalToggle }) {
             />
           </div>
 
-          <div className="absolute top-8 left-8 w-48 h-56 bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-lg overflow-hidden shadow-xl transform -rotate-6 hover:rotate-0 transition-transform duration-300">
+          <div className="absolute top-8 left-8 w-48 h-56 bg-gradient-to-br from-teal-500/20 to-cyan-500/20 border-2 border-white rounded-lg overflow-hidden shadow-xl transform -rotate-6 hover:rotate-0 transition-all duration-300 hover:border-teal-300/70 hover:shadow-[0_0_18px_rgba(20,184,166,0.35),0_0_35px_rgba(20,184,166,0.2),0_0_50px_rgba(20,184,166,0.1)] hover:cursor-pointer">
             <img
               src="/Left.png"
               alt="Left Pic"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300"
             />
           </div>
 
-          <div className="absolute bottom-12 right-8 w-48 h-56 bg-gradient-to-br from-orange-500/20 to-red-500/20 border border-orange-500/30 rounded-lg overflow-hidden shadow-xl transform rotate-6 hover:rotate-0 transition-transform duration-300">
+          <div className="absolute bottom-12 right-8 w-48 h-56 bg-gradient-to-br from-orange-500/20 to-red-500/20 border-2 border-white rounded-lg overflow-hidden shadow-xl transform rotate-6 hover:rotate-0 transition-all duration-300 hover:border-blue-400/70 hover:shadow-[0_0_22px_rgba(29,78,216,0.5),0_0_45px_rgba(29,78,216,0.35),0_0_65px_rgba(29,78,216,0.2)] hover:cursor-pointer">
             <img
               src="/Bottom-Right.jpg"
               alt="Bottom Right pic"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300"
             />
           </div>
         </div>
