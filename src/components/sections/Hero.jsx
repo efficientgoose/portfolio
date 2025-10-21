@@ -29,17 +29,42 @@ export default function Hero({ onTerminalToggle }) {
       <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div>
           <div className="mb-4 flex flex-col gap-2">
-            <div className="text-xs text-green-400 mb-2 flex items-center gap-2">
-              <div className="relative w-1.5 h-1.5">
-                <div className="absolute w-1.5 h-1.5 rounded-full bg-green-400 animate-ping"></div>
-                <div className="absolute w-1.5 h-1.5 rounded-full bg-green-400"></div>
+            <div className="text-sm text-green-400 mb-2 flex items-center gap-2">
+              <div className="relative w-2 h-2">
+                <div className="absolute w-2 h-2 rounded-full bg-green-400 animate-ping"></div>
+                <div className="absolute w-2 h-2 rounded-full bg-green-400"></div>
               </div>
               <span>SYSTEM_ONLINE</span>
             </div>
             <h1 className="text-5xl font-bold mb-2 bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">
               Ajinkya Kale
             </h1>
-            <div className="text-xl text-gray-400 mb-1">Backend Developer</div>
+            <div className="flex">
+              <div className="text-xl text-gray-400 mb-1">
+                Backend Developer
+              </div>
+              <div className="text-xl text-gray-400 mb-1">&nbsp;@</div>
+              <div className="text-xl text-gray-400 mb-1">&nbsp;</div>
+              <div className="text-xl text-gray-400 mb-1">
+                <a
+                  href="https://www.fleetx.io/"
+                  target="_blank"
+                  className="relative underline decoration-dotted decoration-2 decoration-gray-400 underline-offset-4 hover:underline-offset-8 hover:decoration-transparent hover:text-sky-400 transition-all duration-300 after:content-[''] after:absolute after:left-0 after:bottom-[-6px] after:w-full after:h-[2px] after:bg-sky-500 after:opacity-0 after:shadow-[0_0_15px_rgba(14,165,233,1),0_0_30px_rgba(14,165,233,0.6)] hover:after:opacity-100 after:transition-all after:duration-300"
+                  style={{
+                    transition: "all 0.3s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.textShadow =
+                      "0 0 12px rgba(14, 165, 233, 1), 0 0 25px rgba(14, 165, 233, 0.7), 0 0 40px rgba(14, 165, 233, 0.4)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.textShadow = "none";
+                  }}
+                >
+                  Fleetx
+                </a>
+              </div>
+            </div>
             <div className="text-sm text-gray-500 max-w-xl">
               A functioning laptop and a reliable Wi-Fi is all I need. Building
               scalable systems, one microservice at a time.
@@ -106,19 +131,39 @@ export default function Hero({ onTerminalToggle }) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             <div className="bg-white/5 border border-gray-800 rounded p-4 flex flex-col gap-1">
-              <div className="text-green-400 text-xl/2 font-bold">200 OK</div>
+              <div className="flex gap-2 items-center">
+                <div className="relative w-2 h-2">
+                  <div className="absolute w-2 h-2 rounded-full bg-green-400 animate-ping"></div>
+                  <div className="absolute w-2 h-2 rounded-full bg-green-400"></div>
+                </div>
+                <div className="text-green-400 text-xl/2 font-bold">200 OK</div>
+              </div>
               <div className="text-xs text-gray-500">Status: Alive</div>
             </div>
             <div className="bg-white/5 border border-gray-800 rounded p-4 flex flex-col gap-1">
-              <div className="text-red-400 text-xl/2 font-bold">
-                404 Not Found
+              <div className="flex gap-2 items-center">
+                <div className="relative w-2 h-2">
+                  <div className="absolute w-2 h-2 rounded-full bg-red-400 animate-ping"></div>
+                  <div className="absolute w-2 h-2 rounded-full bg-red-400"></div>
+                </div>
+                <div className="text-red-400 text-xl/2 font-bold">
+                  404 Not Found
+                </div>
               </div>
+
               <div className="text-xs text-gray-500">Work-Life Balance</div>
             </div>
             <div className="bg-white/5 border border-gray-800 rounded p-4 flex flex-col gap-1">
-              <div className="text-amber-400 text-xl/2 font-bold">
-                403 Forbidden
+              <div className="flex gap-2 items-center">
+                <div className="relative w-2 h-2">
+                  <div className="absolute w-2 h-2 rounded-full bg-amber-400 animate-ping"></div>
+                  <div className="absolute w-2 h-2 rounded-full bg-amber-400"></div>
+                </div>
+                <div className="text-amber-400 text-xl/2 font-bold">
+                  403 Forbidden
+                </div>
               </div>
+
               <div className="text-xs text-gray-500">Weekends</div>
             </div>
           </div>
