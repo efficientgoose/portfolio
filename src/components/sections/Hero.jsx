@@ -27,11 +27,13 @@ export default function Hero({ onTerminalToggle }) {
       className="min-h-screen flex items-center justify-center px-6 pt-16"
     >
       <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        {/* Left Column - Text Content */}
         <div>
-          <div className="mb-4">
+          <div className="mb-4 flex flex-col gap-2">
             <div className="text-xs text-green-400 mb-2 flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></div>
+              <div className="relative w-1.5 h-1.5">
+                <div className="absolute w-1.5 h-1.5 rounded-full bg-green-400 animate-ping"></div>
+                <div className="absolute w-1.5 h-1.5 rounded-full bg-green-400"></div>
+              </div>
               <span>SYSTEM_ONLINE</span>
             </div>
             <h1 className="text-5xl font-bold mb-2 bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">
@@ -102,18 +104,22 @@ export default function Hero({ onTerminalToggle }) {
             </a>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
-            <div className="bg-white/5 border border-gray-800 rounded p-4">
-              <div className="text-green-400 text-2xl font-bold">5+</div>
-              <div className="text-xs text-gray-500">Technologies</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="bg-white/5 border border-gray-800 rounded p-4 flex flex-col gap-1">
+              <div className="text-green-400 text-xl/2 font-bold">200 OK</div>
+              <div className="text-xs text-gray-500">Status: Alive</div>
             </div>
-            <div className="bg-white/5 border border-gray-800 rounded p-4">
-              <div className="text-cyan-400 text-2xl font-bold">99.9%</div>
-              <div className="text-xs text-gray-500">Uptime Target</div>
+            <div className="bg-white/5 border border-gray-800 rounded p-4 flex flex-col gap-1">
+              <div className="text-red-400 text-xl/2 font-bold">
+                404 Not Found
+              </div>
+              <div className="text-xs text-gray-500">Work-Life Balance</div>
             </div>
-            <div className="bg-white/5 border border-gray-800 rounded p-4">
-              <div className="text-orange-400 text-2xl font-bold">24/7</div>
-              <div className="text-xs text-gray-500">Learning Mode</div>
+            <div className="bg-white/5 border border-gray-800 rounded p-4 flex flex-col gap-1">
+              <div className="text-amber-400 text-xl/2 font-bold">
+                403 Forbidden
+              </div>
+              <div className="text-xs text-gray-500">Weekends</div>
             </div>
           </div>
         </div>
