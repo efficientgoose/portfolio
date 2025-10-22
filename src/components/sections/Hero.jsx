@@ -170,7 +170,7 @@ export default function Hero({ onTerminalToggle }) {
                 <MapPin size={12} className="text-green-400/75" />
                 <div className="flex gap-1">
                   <span className="text-green-400/75 tracking-tighter">
-                    New Delhi, India
+                    Gurgaon, India
                   </span>
                   <span className="text-gray-700">│</span>
                   <span className="text-green-400/75">UTC+5:30</span>
@@ -240,7 +240,7 @@ export default function Hero({ onTerminalToggle }) {
               </div>
 
               <div className="text-sm text-gray-500 max-w-xl">
-                <p>Just a laptop, Wi-Fi, and a passion for building things.</p>
+                <p>Just a laptop, Wi-Fi, and a knack for building things.</p>
                 <p>Turning coffee into code, bugs into features. </p>
               </div>
             </div>
