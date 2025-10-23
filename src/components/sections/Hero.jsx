@@ -240,8 +240,10 @@ export default function Hero({ onTerminalToggle }) {
               </div>
 
               <div className="text-sm text-gray-500 max-w-xl">
-                <p>Just a laptop, Wi-Fi, and a knack for building things.</p>
-                <p>Turning coffee into code, bugs into features. </p>
+                <p>
+                  Just a laptop, Wi-Fi, and an unhealthy urge to ship stuff.
+                </p>
+                <p>Turning coffee into code, and chaos into commits. </p>
               </div>
             </div>
 
@@ -296,9 +298,6 @@ export default function Hero({ onTerminalToggle }) {
               >
                 <Terminal size={16} />
                 <span>Launch Terminal</span>
-                <span className="text-[10px] text-gray-600 group-hover:text-green-400">
-                  (it's fun!)
-                </span>
               </button>
             </div>
 
