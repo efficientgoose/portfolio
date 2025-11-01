@@ -1,16 +1,17 @@
 export const projects = [
   {
-    id: "project_01",
+    id: "Jash - Shell written purely in Java",
     status: "IN_DEV",
     statusColor: "bg-yellow-400",
     statusTextColor: "text-yellow-400",
     statusText: "Building",
-    stack: "Spring Boot + Kafka",
+    stack: "Java 17+ • ProcessBuilder",
     deploy: "Pending",
     description: [
-      "// Real-time data pipeline",
-      "// Distributed architecture",
-      "// Coming soon...",
+      "// POSIX-compliant shell interpreter",
+      "// Handles builtins: cd, pwd, echo, type, exit",
+      "// Executes external programs from $PATH",
+      "// Command parsing with quote handling",
     ],
   },
   {

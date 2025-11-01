@@ -28,7 +28,7 @@ export default function CommandMenu({
       id="command-menu-list"
       className="absolute bottom-full left-0 right-0 mb-2 bg-gray-900 border border-green-500/30 rounded max-h-48 overflow-y-auto shadow-lg"
     >
-      <div className="px-3 py-1 text-[10px] text-gray-600 border-b border-gray-800 flex items-center justify-between sticky top-0 bg-gray-900">
+      <div className="px-3 py-1 text-[10px] text-gray-400 border-b border-gray-800 flex items-center justify-between sticky top-0 bg-gray-900">
         <span>Commands</span>
         <span>↑↓ navigate • Enter select</span>
       </div>
@@ -44,7 +44,7 @@ export default function CommandMenu({
           }`}
         >
           <span className="font-mono font-bold">{item.cmd}</span>
-          <span className="text-[10px] text-gray-600 ml-4">{item.desc}</span>
+          <span className="text-[10px] text-gray-400 ml-4">{item.desc}</span>
         </div>
       ))}
     </div>

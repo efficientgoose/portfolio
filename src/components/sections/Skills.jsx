@@ -117,7 +117,7 @@ export default function Skills() {
         <div className="flex items-center gap-3 mb-8">
           <Wrench size={25} className="text-green-400" />
           <h2 className="text-2xl font-bold text-gray-100">Skills</h2>
-          <span className="text-xs text-gray-600 ml-auto">// skill cloud</span>
+          <span className="text-xs text-gray-400 ml-auto">// skill cloud</span>
         </div>
 
         <div
@@ -156,7 +156,7 @@ export default function Skills() {
                 <span
                   className={`${
                     tech.size
-                  } font-bold text-gray-600 group-hover:text-green-400 transition-all duration-300 block whitespace-nowrap ${
+                  } font-bold text-gray-400 group-hover:text-green-400 transition-all duration-300 block whitespace-nowrap ${
                     isDraggingThis ? "text-green-400" : ""
                   }`}
                   style={{
@@ -190,7 +190,7 @@ export default function Skills() {
           })}
         </div>
 
-        <div className="mt-6 flex items-center justify-center gap-8 text-xs text-gray-600">
+        <div className="mt-6 flex items-center justify-center gap-8 text-xs text-gray-400">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
             <span>Hover to see proficiency</span>

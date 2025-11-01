@@ -4,7 +4,6 @@ import Footer from "./components/layout/Footer";
 import Hero from "./components/sections/Hero.jsx";
 import Skills from "./components/sections/Skills";
 import Experience from "./components/sections/Experience";
-import Projects from "./components/sections/Projects";
 import Contact from "./components/sections/Contact";
 import Terminal from "./components/terminal/Terminal";
 import BackgroundEffects from "./components/effects/BackgroundEffects";
@@ -27,7 +26,7 @@ export default function Portfolio() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -53,7 +52,7 @@ export default function Portfolio() {
         <Hero onTerminalToggle={() => setTerminalOpen(!terminalOpen)} />
         <Skills />
         <Experience />
-        <Projects />
+        {/* <Projects /> */}
         <Contact />
         <Footer />
       </div>
@@ -70,5 +69,6 @@ export default function Portfolio() {
     </div>
   );
 }
+
 
 

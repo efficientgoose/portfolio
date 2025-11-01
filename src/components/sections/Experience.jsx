@@ -13,15 +13,15 @@ export default function Experience() {
   };
 
   return (
-    <section id="experience" className="py-20 px-6 bg-white/[0.02]">
-      <div className="max-w-4xl mx-auto">
+    <section id="experience" className="py-20 px-6">
+      <div className="max-w-6xl mx-auto">
         {/* Section Header */}
-        <div className="flex items-center gap-3 mb-12">
+        <div className="flex items-center gap-3 mb-8">
           <Briefcase size={25} className="text-green-400" />
           <h2 className="text-2xl font-bold text-gray-100">
             Experience + Education
           </h2>
-          <span className="ml-auto text-xs text-gray-600">
+          <span className="ml-auto text-xs text-gray-400">
             // career trajectory
           </span>
         </div>
@@ -92,7 +92,7 @@ export default function Experience() {
                     )}
                   </div>
 
-                  <div className="text-xs text-gray-500 mb-3 font-mono">
+                  <div className="text-xs text-gray-400 mb-3 font-mono">
                     {job.duration}
                   </div>
 
@@ -102,7 +102,7 @@ export default function Experience() {
 
                   {/* Footer Tag */}
                   {job.footer && (
-                    <div className="mt-4 pt-4 border-t border-gray-800 flex items-center gap-2 text-[10px] text-gray-600">
+                    <div className="mt-4 pt-4 border-t border-gray-800 flex items-center gap-2 text-[10px] text-gray-400">
                       <div
                         className={`w-1 h-1 rounded-full animate-pulse ${
                           job.status === "education"

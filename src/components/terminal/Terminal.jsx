@@ -119,7 +119,7 @@ export default function Terminal({
         <div className="flex items-center gap-2 text-green-400 text-xs">
           <TerminalIcon size={14} />
           <span>terminal</span>
-          <span className="text-gray-600 ml-2 text-[10px]">
+          <span className="text-gray-400 ml-2 text-[10px]">
             Press Esc to close
           </span>
         </div>

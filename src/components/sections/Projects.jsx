@@ -9,7 +9,7 @@ export default function Projects() {
         <div className="flex items-center gap-3 mb-8">
           <FolderGit2 size={25} className="text-green-400" />
           <h2 className="text-2xl font-bold text-gray-100">Projects</h2>
-          <span className="text-xs text-gray-600 ml-auto">// building</span>
+          <span className="text-xs text-gray-400 ml-auto">// building</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -32,7 +32,7 @@ export default function Projects() {
                 </div>
               </div>
 
-              <div className="text-xs text-gray-600 space-y-1 mb-3">
+              <div className="text-xs text-gray-400 space-y-1 mb-3">
                 <div>Status: {project.statusText}</div>
                 <div>Stack: {project.stack}</div>
                 <div>Deploy: {project.deploy}</div>
@@ -51,7 +51,7 @@ export default function Projects() {
         </div>
 
         <div className="mt-6 text-center">
-          <div className="inline-flex items-center gap-2 text-xs text-gray-600 bg-white/5 border border-gray-800 rounded px-4 py-2">
+          <div className="inline-flex items-center gap-2 text-xs text-gray-400 bg-white/5 border border-gray-800 rounded px-4 py-2">
             <Coffee size={14} className="text-orange-400" />
             <span>Crafting production-ready systems</span>
           </div>

@@ -164,7 +164,7 @@ export default function Hero({ onTerminalToggle }) {
                   cursorColor={cursorColorClasses[currentMessage.color]}
                 />
               </div>
-              <div className="flex items-center gap-2 text-xs font-mono text-gray-600">
+              <div className="flex items-center gap-2 text-xs font-mono text-gray-400">
                 <span className="text-gray-700">└─</span>
                 <span>STATIONED_AT:</span>
                 <MapPin size={12} className="text-green-400/75" />
@@ -212,17 +212,17 @@ export default function Hero({ onTerminalToggle }) {
               </div>
               <div className="flex flex-col gap-1">
                 <div className="flex">
-                  <div className="text-xl text-gray-400 mb-1">
+                  <div className="text-xl text-gray-400 mb-4 -mt-2">
                     Backend Developer
                   </div>
-                  <div className="text-xl text-gray-400 mb-1">
+                  <div className="text-xl text-gray-400 mb-4 -mt-2">
                     &nbsp;@&nbsp;
                   </div>
                   <a
                     href="https://www.fleetx.io/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="relative text-xl text-gray-400 mb-1 underline decoration-dotted decoration-2 decoration-gray-400 underline-offset-4 hover:underline-offset-8 hover:decoration-transparent hover:text-sky-400 transition-all duration-300 after:content-[''] after:absolute after:left-0 after:bottom-[-6px] after:w-full after:h-[2px] after:bg-sky-500 after:opacity-0 after:shadow-[0_0_15px_rgba(14,165,233,1),0_0_30px_rgba(14,165,233,0.6)] hover:after:opacity-100 after:transition-all after:duration-300"
+                    className="relative text-xl -mt-2 text-gray-400 mb-1 underline decoration-dotted decoration-2 decoration-gray-400 underline-offset-4 hover:underline-offset-8 hover:decoration-transparent hover:text-sky-400 transition-all duration-300 after:content-[''] after:absolute after:left-0 after:bottom-[-6px] after:w-full after:h-[2px] after:bg-sky-500 after:opacity-0 after:shadow-[0_0_15px_rgba(14,165,233,1),0_0_30px_rgba(14,165,233,0.6)] hover:after:opacity-100 after:transition-all after:duration-300"
                     style={{
                       transition: "all 0.3s ease",
                     }}
@@ -239,7 +239,7 @@ export default function Hero({ onTerminalToggle }) {
                 </div>
               </div>
 
-              <div className="text-sm text-gray-500 max-w-xl">
+              <div className="text-sm text-gray-300 max-w-xl">
                 <p>
                   Just a laptop, Wi-Fi, and an unhealthy urge to ship stuff.
                 </p>
@@ -301,11 +301,12 @@ export default function Hero({ onTerminalToggle }) {
               </button>
             </div>
 
-            <div className="flex gap-6 text-gray-500 mb-12">
+            <div className="flex gap-6 text-gray-400 mb-12">
               <a
                 href="https://github.com/efficientgoose"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="View my GitHub profile"
                 className="p-2.5 border border-gray-800 rounded hover:border-green-500/30 hover:text-green-400 transition-all"
                 onMouseEnter={(e) => {
                   e.currentTarget.style.boxShadow =
@@ -322,6 +323,7 @@ export default function Hero({ onTerminalToggle }) {
                 href="https://linkedin.com/in/ajinkode"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Connect me over LinkedIn"
                 className="p-2.5 border border-gray-800 rounded hover:border-green-500/30 hover:text-green-400 transition-all"
                 onMouseEnter={(e) => {
                   e.currentTarget.style.boxShadow =
@@ -337,6 +339,7 @@ export default function Hero({ onTerminalToggle }) {
               <a
                 href="mailto:ajinkode@gmail.com"
                 className="p-2.5 border border-gray-800 rounded hover:border-green-500/30 hover:text-green-400 transition-all"
+                aria-label="Mail me"
                 onMouseEnter={(e) => {
                   e.currentTarget.style.boxShadow =
                     "0 0 10px rgba(74, 222, 128, 0.2), 0 0 20px rgba(74, 222, 128, 0.1)";
@@ -359,7 +362,7 @@ export default function Hero({ onTerminalToggle }) {
                 </div>
                 <div className="text-green-400 text-xl/2 font-bold">200 OK</div>
               </div>
-              <div className="text-xs text-gray-500">Status: Alive</div>
+              <div className="text-xs text-gray-400">Status: Alive</div>
             </div>
             <div className="bg-white/5 border border-gray-800 rounded p-4 flex flex-col gap-1">
               <div className="flex gap-2 items-center">
@@ -372,7 +375,7 @@ export default function Hero({ onTerminalToggle }) {
                 </div>
               </div>
 
-              <div className="text-xs text-gray-500">Work-Life Balance</div>
+              <div className="text-xs text-gray-400">Work-Life Balance</div>
             </div>
             <div className="bg-white/5 border border-gray-800 rounded p-4 flex flex-col gap-1">
               <div className="flex gap-2 items-center">
@@ -385,7 +388,7 @@ export default function Hero({ onTerminalToggle }) {
                 </div>
               </div>
 
-              <div className="text-xs text-gray-500">Weekends</div>
+              <div className="text-xs text-gray-400">Weekends</div>
             </div>
           </div> */}
           </div>
@@ -393,7 +396,7 @@ export default function Hero({ onTerminalToggle }) {
           <div className="relative h-[500px] flex items-center justify-center">
             <div className="relative z-10 w-64 h-80 bg-gradient-to-br border-2 border-white rounded-lg overflow-hidden shadow-2xl shadow-green-500/20 transition-all duration-300 hover:border-amber-300/70 hover:shadow-[0_0_18px_rgba(251,146,60,0.35),0_0_35px_rgba(251,146,60,0.2),0_0_50px_rgba(251,146,60,0.1)] hover:cursor-pointer">
               <img
-                src="/Main.jpg"
+                src="/Main.webp"
                 alt="Ajinkya Kale"
                 className="w-full h-full object-cover"
               />
@@ -401,7 +404,7 @@ export default function Hero({ onTerminalToggle }) {
 
             <div className="absolute top-8 left-8 w-48 h-56 bg-gradient-to-br from-teal-500/20 to-cyan-500/20 border-2 border-white rounded-lg overflow-hidden shadow-xl transform -rotate-6 hover:rotate-0 transition-all duration-300 hover:border-teal-300/70 hover:shadow-[0_0_18px_rgba(20,184,166,0.35),0_0_35px_rgba(20,184,166,0.2),0_0_50px_rgba(20,184,166,0.1)] hover:cursor-pointer">
               <img
-                src="/Left.png"
+                src="/Left.webp"
                 alt="Left Pic"
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300"
               />
@@ -409,7 +412,7 @@ export default function Hero({ onTerminalToggle }) {
 
             <div className="absolute bottom-12 right-8 w-48 h-56 bg-gradient-to-br from-orange-500/20 to-red-500/20 border-2 border-white rounded-lg overflow-hidden shadow-xl transform rotate-6 hover:rotate-0 transition-all duration-300 hover:border-blue-400/70 hover:shadow-[0_0_22px_rgba(29,78,216,0.5),0_0_45px_rgba(29,78,216,0.35),0_0_65px_rgba(29,78,216,0.2)] hover:cursor-pointer">
               <img
-                src="/Bottom-Right.jpg"
+                src="/Bottom-Right.webp"
                 alt="Bottom Right pic"
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300"
               />

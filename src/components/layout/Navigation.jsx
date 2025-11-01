@@ -24,7 +24,7 @@ export default function Navigation() {
 
         {/* Right side: navigation links */}
         <div className="flex gap-6 text-sm text-gray-300 items-center">
-          <a
+          {/* <a
             href="#about"
             className="hover:text-green-400 transition-all"
             onMouseEnter={(e) => {
@@ -36,7 +36,7 @@ export default function Navigation() {
             }}
           >
             /about
-          </a>
+          </a> */}
 
           <a
             href="#skills"
@@ -66,7 +66,7 @@ export default function Navigation() {
             /experience
           </a>
 
-          <a
+          {/* <a
             href="#projects"
             className="hover:text-green-400 transition-all"
             onMouseEnter={(e) => {
@@ -78,7 +78,7 @@ export default function Navigation() {
             }}
           >
             /projects
-          </a>
+          </a> */}
 
           <a
             href="#contact"
