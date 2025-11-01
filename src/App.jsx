@@ -48,7 +48,7 @@ export default function Portfolio() {
       <BackgroundEffects />
 
       <div className="relative z-10">
-        <Navigation onTerminalToggle={() => setTerminalOpen(!terminalOpen)} />
+        <Navigation />
         <Hero onTerminalToggle={() => setTerminalOpen(!terminalOpen)} />
         <Skills />
         <Experience />
