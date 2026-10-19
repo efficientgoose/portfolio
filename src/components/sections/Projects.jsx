@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Star } from "lucide-react";
 import { Container, Hr, SectionHeader, ViewAll } from "../ui/Layout";
 import { projects } from "../../data/projects";
@@ -34,7 +35,7 @@ function Sunburst({ palette }) {
       aria-hidden="true"
       viewBox="0 0 400 240"
       preserveAspectRatio="xMidYMax slice"
-      className="absolute inset-0 size-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+      className="absolute inset-0 size-full opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-data-[in-view=true]:opacity-100"
     >
       <filter id="paper-grain">
         <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
@@ -55,7 +56,7 @@ function StatusDot({ status }) {
     <div className="flex select-none items-center gap-1">
       <span className="relative flex size-2.5 items-center justify-center">
         {live && (
-          <span className="absolute size-2.5 animate-ping rounded-full bg-green-500 opacity-40 group-hover:hidden" />
+          <span className="absolute size-2.5 animate-ping rounded-full bg-green-500 opacity-40 group-hover:hidden group-data-[in-view=true]:hidden" />
         )}
         <span
           className={`size-2 rounded-full ${live ? "bg-green-500" : status === "Building" ? "bg-yellow-400" : "bg-muted"}`}
@@ -67,9 +68,38 @@ function StatusDot({ status }) {
 }
 
 function ProjectCard({ project, wide }) {
+  const cardRef = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const touch = window.matchMedia("(hover: none)");
+    let observer;
+
+    const sync = () => {
+      observer?.disconnect();
+      setInView(false);
+      if (!touch.matches) return;
+
+      observer = new IntersectionObserver(
+        ([entry]) => setInView(entry.isIntersecting && entry.intersectionRatio >= 0.45),
+        { threshold: [0, 0.45] },
+      );
+      observer.observe(cardRef.current);
+    };
+
+    sync();
+    touch.addEventListener("change", sync);
+    return () => {
+      observer?.disconnect();
+      touch.removeEventListener("change", sync);
+    };
+  }, []);
+
   return (
     <div className="relative z-10 p-4 sm:p-5">
       <a
+        ref={cardRef}
+        data-in-view={inView}
         href={project.href}
         target="_blank"
         rel="noopener noreferrer"
@@ -82,10 +112,10 @@ function ProjectCard({ project, wide }) {
             }`}
           >
             <Sunburst palette={project.palette} />
-            <span className="absolute left-2 top-2 text-xs font-medium text-muted-foreground transition-all duration-300 group-hover:left-1/2 group-hover:-translate-x-1/2 group-hover:text-black">
+            <span className="absolute left-2 top-2 text-xs font-medium text-muted-foreground transition-all duration-300 group-hover:left-1/2 group-hover:-translate-x-1/2 group-hover:text-black group-data-[in-view=true]:left-1/2 group-data-[in-view=true]:-translate-x-1/2 group-data-[in-view=true]:text-black">
               {project.label}
             </span>
-            <div className="absolute bottom-0 left-1/2 h-[75%] w-[80%] -translate-x-1/2 rounded-t-[6px] bg-background p-[2px] pb-0 transition-all duration-300 group-hover:h-[70%]">
+            <div className="absolute bottom-0 left-1/2 h-[75%] w-[80%] -translate-x-1/2 rounded-t-[6px] bg-background p-[2px] pb-0 transition-all duration-300 group-hover:h-[70%] group-data-[in-view=true]:h-[70%]">
               <div className="h-full w-full overflow-hidden rounded-t-[4px]">
                 <img
                   src={project.image}
@@ -109,7 +139,7 @@ function ProjectCard({ project, wide }) {
             <StatusDot status={project.status} />
           </div>
           <p className="text-sm text-muted-foreground">{project.description}</p>
-          <div className="flex select-none items-center gap-1 text-sm text-muted-foreground transition-colors duration-300 group-hover:text-spot">
+          <div className="flex select-none items-center gap-1 text-sm text-muted-foreground transition-colors duration-300 group-hover:text-spot group-data-[in-view=true]:text-spot">
             View Project
             <ArrowUpRight aria-hidden="true" className="size-4" />
           </div>
