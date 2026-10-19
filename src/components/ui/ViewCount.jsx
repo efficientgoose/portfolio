@@ -21,9 +21,10 @@ export default function ViewCount() {
   if (views === null) return null;
 
   return (
-    <span className="flex select-none items-center gap-1.5 px-1.5 text-muted">
-      <Eye aria-hidden="true" className="size-[18px]" />
-      <span className="text-xs tabular-nums sm:text-sm">
+    // A small pill, styled like the social links.
+    <span className="mr-1 flex select-none items-center gap-1.5 rounded-full border border-border bg-muted-bg px-2 py-1 text-muted-foreground">
+      <Eye aria-hidden="true" className="size-3.5" />
+      <span className="text-xs font-medium leading-none tabular-nums">
         <span className="sr-only">Portfolio views: </span>
         {format.format(views)}
       </span>
