@@ -10,6 +10,7 @@ import { ANCHORA_URL, EMAIL, GITHUB_URL, LINKEDIN_URL, RESUME_URL } from "../../
 
 // The shuffle button (or a click on the avatar) swaps between these.
 const photos = [
+  { src: "/Profile.webp", position: "50% 35%" }, // default
   { src: "/Bottom-Right.webp", position: "50% 26%" },
   { src: "/Main.webp", position: "50% 28%" },
   { src: "/Left.webp", position: "50% 30%" },
