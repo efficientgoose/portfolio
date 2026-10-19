@@ -116,7 +116,7 @@ export default function Hero() {
                 className="cursor-pointer rounded-[12px] border border-border p-[4px] transition duration-300 hover:brightness-90"
               >
                 <span
-                  className={`relative block size-[90px] overflow-hidden rounded-[8px] ${glitching ? "is-glitching" : ""}`}
+                  className={`relative block size-[90px] overflow-hidden max-[359px]:size-[68px] rounded-[8px] ${glitching ? "is-glitching" : ""}`}
                 >
                   <img
                     src={photos[photo].src}
@@ -147,7 +147,7 @@ export default function Hero() {
               {/* Name and subtitle are centred on the photo's vertical middle. */}
               <div className="flex select-none flex-col justify-center self-stretch">
                 <div>
-                  <h1 className="text-[1.55rem] font-bold leading-[1.08] text-title">Ajinkya Kale</h1>
+                  <h1 className="whitespace-nowrap text-[1.55rem] font-bold leading-[1.08] text-title">Ajinkya Kale</h1>
                   <p className="mt-1 text-sm text-muted-foreground">
                     <RotatingRole roles={["Backend Engineer", "Co-Founder, Anchora"]} />
                   </p>
@@ -158,7 +158,10 @@ export default function Hero() {
             <div className="flex flex-col items-end justify-between">
               {/* View count and small icon buttons grouped in the top-right corner, as on the reference. */}
               <div className="flex items-center">
-                <ViewCount />
+                {/* On phones the view count moves to the bottom-right slot, so the name keeps room. */}
+                <span className="hidden sm:flex">
+                  <ViewCount />
+                </span>
                 <button
                   type="button"
                   onClick={shuffle}
@@ -175,6 +178,9 @@ export default function Hero() {
                 <MapPin aria-hidden="true" className="size-4" />
                 <span className="text-xs sm:text-sm">Gurgaon, India</span>
               </div>
+              <span className="flex sm:hidden">
+                <ViewCount />
+              </span>
             </div>
 
             {/* Handwritten note in the left margin, as on the reference. Hovering wiggles the words,

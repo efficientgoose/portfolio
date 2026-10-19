@@ -28,7 +28,7 @@ export default function RotatingRole({ roles, interval = 3000, className }) {
   }, [roles.length, interval]);
 
   return (
-    <span className="relative inline-block" aria-live="polite">
+    <span className="relative inline-block whitespace-nowrap" aria-live="polite">
       <span
         className={className}
         style={{
