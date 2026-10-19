@@ -1,12 +1,13 @@
-import { useRef, useState } from "react";
-import { FileText, Globe, Mail, MapPin, Moon, Shuffle, Sun } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { getCalApi } from "@calcom/embed-react";
+import { CalendarDays, Globe, Mail, MapPin, Moon, Shuffle, Sun } from "lucide-react";
 import { SiGithub } from "react-icons/si";
 import { FaLinkedinIn } from "react-icons/fa6";
 import { Container, DotBand, Hr } from "../ui/Layout";
 import GitHubGraph from "./GitHubGraph";
 import RotatingRole from "../ui/RotatingRole";
 import { playGlitchSound, playToggleSound } from "../../lib/sound";
-import { ANCHORA_URL, EMAIL, GITHUB_URL, LINKEDIN_URL, RESUME_URL } from "../../data/links";
+import { ANCHORA_URL, CAL_LINK, EMAIL, GITHUB_URL, LINKEDIN_URL } from "../../data/links";
 
 // The shuffle button (or a click on the avatar) swaps between these.
 const photos = [
@@ -41,13 +42,37 @@ function ThemeToggle() {
   };
 
   return (
-    <button type="button" onClick={toggle} aria-label="Toggle theme" className={iconButton}>
+    <button type="button" onClick={toggle} aria-label="Toggle theme" data-own-sound className={iconButton}>
       {theme === "dark" ? <Sun className="size-[18px]" /> : <Moon className="size-[18px]" />}
     </button>
   );
 }
 
+// Load Cal.com's embed once and style its pop-up to match the site (dark, gold accent).
+function useCalPopup() {
+  useEffect(() => {
+    let cancelled = false;
+    getCalApi({ namespace: "coffee" })
+      .then((cal) => {
+        if (cancelled) return;
+        cal("ui", {
+          theme: "dark",
+          hideEventTypeDetails: false,
+          layout: "month_view",
+          cssVarsPerTheme: { dark: { "cal-brand": "#d9b562" }, light: { "cal-brand": "#b7791f" } },
+        });
+      })
+      .catch(() => {
+        // If the embed script can't load, the button simply does nothing; the email CTA still works.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+}
+
 export default function Hero() {
+  useCalPopup();
   const [photo, setPhoto] = useState(0);
   const [glitching, setGlitching] = useState(false);
   const timers = useRef([]);
@@ -84,6 +109,7 @@ export default function Hero() {
               <button
                 type="button"
                 onClick={shuffle}
+                data-own-sound
                 aria-label="Shuffle photo"
                 className="cursor-pointer rounded-[12px] border border-border p-[4px] transition duration-300 hover:brightness-90"
               >
@@ -116,16 +142,8 @@ export default function Hero() {
                   )}
                 </span>
               </button>
-              <div className="flex h-full select-none flex-col justify-between py-1">
-                <button
-                  type="button"
-                  onClick={shuffle}
-                  aria-label="Shuffle photo"
-                  title="Shuffle photo"
-                  className={`${iconButton} -ml-1.5 -mt-1`}
-                >
-                  <Shuffle className="size-4" />
-                </button>
+              {/* Name and subtitle are centred on the photo's vertical middle. */}
+              <div className="flex select-none flex-col justify-center self-stretch">
                 <div>
                   <h1 className="text-[1.55rem] font-bold leading-[1.08] text-title">Ajinkya Kale</h1>
                   <p className="mt-1 text-sm text-muted-foreground">
@@ -136,7 +154,20 @@ export default function Hero() {
             </div>
 
             <div className="flex flex-col items-end justify-between">
-              <ThemeToggle />
+              {/* Small icon buttons grouped in the top-right corner, as on the reference. */}
+              <div className="flex items-center">
+                <button
+                  type="button"
+                  onClick={shuffle}
+                  data-own-sound
+                  aria-label="Shuffle photo"
+                  title="Shuffle photo"
+                  className={iconButton}
+                >
+                  <Shuffle className="size-[18px]" />
+                </button>
+                <ThemeToggle />
+              </div>
               <div className="hidden select-none items-center gap-1.5 font-medium text-muted sm:flex">
                 <MapPin aria-hidden="true" className="size-4" />
                 <span className="text-xs sm:text-sm">Gurgaon, India</span>
@@ -200,32 +231,42 @@ export default function Hero() {
         <Container>
           <div className="flex flex-col gap-2 leading-[1.6]">
             <p>
-              Hey, I’m Ajinkya, a backend engineer at Fleetx, where I build the real-time pipelines that take in 1B+
-              sensor readings a day from 350K+ vehicles, with Netty servers, Kafka and Spark streams, and Spring Boot
-              services.
+              Hey, I'm Ajinkya!
             </p>
             <p>
-              I’m also the co-founder of Anchora, a study-abroad planner for students in India, which I’m building end
-              to end, from the Postgres schema to its AI guide.
+              I'm a backend engineer at <strong>Fleetx</strong>, where I build and scale real-time systems processing{" "}
+              <strong>1B+ sensor readings daily from 350K+ vehicles</strong>. My work involves everything from
+              Netty-based TCP servers and Kafka pipelines to Spark streaming and Spring Boot services.
+            </p>
+            <p>
+              I'm also the co-founder of <strong>Anchora</strong>, an AI-powered study-abroad platform built to simplify
+              the journey for students in India. I'm building it end-to-end, from designing the PostgreSQL architecture
+              and backend systems to developing its AI assistant.
+            </p>
+            <p>
+              I enjoy solving complex engineering problems, building products from scratch, and turning ambitious
+              ideas into things people can actually use.
             </p>
           </div>
 
           <div className="flex select-none justify-center gap-2 pt-4.5">
+            {/* Opens the Cal.com booking page as a pop-up over the site (wired in useCalPopup). */}
+            <button
+              type="button"
+              data-cal-namespace="coffee"
+              data-cal-link={CAL_LINK}
+              data-cal-config='{"layout":"month_view","theme":"dark"}'
+              className="flex w-fit items-center gap-1.5 overflow-hidden rounded-[9px] bg-strong px-2.5 py-[7px] text-sm font-medium text-background transition-opacity duration-300 hover:opacity-80 sm:py-1.5"
+            >
+              <CalendarDays aria-hidden="true" className="size-4" />
+              Grab a Coffee
+            </button>
             <a
               href={`mailto:${EMAIL}`}
-              className="flex w-fit items-center gap-1.5 overflow-hidden rounded-[9px] bg-[color:var(--accent-tint)] px-2.5 py-[7px] text-sm font-medium text-spot transition-colors duration-300 hover:bg-[color:var(--accent-tint-hover)] sm:py-1.5"
+              className="flex w-fit items-center gap-1.5 overflow-hidden rounded-[9px] border border-border bg-muted-bg px-2.5 py-[7px] text-sm font-medium text-foreground transition-colors duration-300 hover:bg-muted-bg-hover sm:py-1.5"
             >
               <Mail aria-hidden="true" className="size-4" />
               Send an email
-            </a>
-            <a
-              href={RESUME_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex w-fit items-center gap-1.5 overflow-hidden rounded-[9px] border border-border bg-muted-bg px-2.5 py-[7px] text-sm font-medium text-foreground transition-colors duration-300 hover:bg-muted-bg-hover sm:py-1.5"
-            >
-              <FileText aria-hidden="true" className="size-4" />
-              View résumé
             </a>
           </div>
 

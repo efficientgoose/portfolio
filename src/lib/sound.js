@@ -73,3 +73,29 @@ export function playGlitchSound() {
     // Audio is a nicety; ignore browsers that block or lack Web Audio.
   }
 }
+
+// A soft, short UI click: a tiny burst of band-passed noise with a quick decay.
+export function playClickSound() {
+  try {
+    const ac = audio();
+    const now = ac.currentTime;
+    const length = Math.floor(ac.sampleRate * 0.03);
+    const buffer = ac.createBuffer(1, length, ac.sampleRate);
+    const samples = buffer.getChannelData(0);
+    for (let i = 0; i < length; i++) samples[i] = (Math.random() * 2 - 1) * (1 - i / length) ** 3;
+
+    const source = ac.createBufferSource();
+    source.buffer = buffer;
+    const band = ac.createBiquadFilter();
+    band.type = "bandpass";
+    band.frequency.value = 2400;
+    band.Q.value = 1.2;
+    const gain = ac.createGain();
+    gain.gain.value = 0.25;
+
+    source.connect(band).connect(gain).connect(ac.destination);
+    source.start(now);
+  } catch {
+    // Audio is a nicety; ignore browsers that block or lack Web Audio.
+  }
+}

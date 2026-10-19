@@ -114,8 +114,12 @@ function Rows({ rows }) {
 const RADIUS = 80; // words within this distance of the cursor light up; the inner part is fully lit
 const HOLD_MS = 300; // a lit word keeps its colour this long after the cursor moves on
 const FADE_MS = 1000; // then eases back to dim; older parts of the path are always dimmer than newer ones
-const TWINKLE_MS = 350; // on phones and touch screens, how often a new batch of words lights up
-const TWINKLE_COUNT = 5; // words per batch
+// Mobile twinkle, paced like stars: one word at a time glows up softly, lingers, then fades slowly.
+const TWINKLE_MS = 900; // how often a new word starts to glow
+const TWINKLE_COUNT = 1; // words started each time
+const TWINKLE_RISE_MS = 800;
+const TWINKLE_PEAK_MS = 600;
+const TWINKLE_FADE_MS = 2500;
 // Twinkle where there's no cursor to follow: touch devices, and narrow (phone-sized) windows.
 const TWINKLE_QUERY = "(hover: none), (max-width: 640px)";
 
@@ -128,6 +132,7 @@ export default function WordField({ seed = 7, className = "" }) {
   const heat = useRef(new Map()); // word element -> { level, t } at the moment it was last lit
   const frame = useRef(0);
   const pointer = useRef(null);
+  const pending = useRef(new Set()); // twinkle timeouts, cleared on unmount
 
   // How lit a word still is right now, after fading since it was last touched.
   const current = (entry, now) =>
@@ -164,6 +169,24 @@ export default function WordField({ seed = 7, className = "" }) {
     }
   };
 
+  // A slow star-like glow: ease up to `level`, hold, then fade out gently. Unlike `light`, there's no instant jump.
+  const twinkle = (el, level) => {
+    if (el.dataset.twinkling) return;
+    el.dataset.twinkling = "1";
+    const ease = "cubic-bezier(0.45, 0, 0.55, 1)";
+    el.style.transition = `color ${TWINKLE_RISE_MS}ms ${ease}, opacity ${TWINKLE_RISE_MS}ms ${ease}`;
+    el.style.color = `color-mix(in srgb, var(--word-spot) ${Math.round(level * 100)}%, var(--muted))`;
+    el.style.opacity = String(0.5 + 0.5 * level);
+    const timer = setTimeout(() => {
+      el.style.transition = `color ${TWINKLE_FADE_MS}ms ${ease}, opacity ${TWINKLE_FADE_MS}ms ${ease}`;
+      el.style.color = "";
+      el.style.opacity = "";
+      const done = setTimeout(() => delete el.dataset.twinkling, TWINKLE_FADE_MS);
+      pending.current.add(done);
+    }, TWINKLE_RISE_MS + TWINKLE_PEAK_MS);
+    pending.current.add(timer);
+  };
+
   // Where there's no hover, random visible words twinkle on their own instead.
   // Re-evaluated when the window crosses the breakpoint, so resizing switches modes.
   useEffect(() => {
@@ -177,10 +200,9 @@ export default function WordField({ seed = 7, className = "" }) {
         const r = el.getBoundingClientRect();
         return r.width > 0 && r.right > box.left && r.left < box.right;
       });
-      const now = performance.now();
       for (let i = 0; i < TWINKLE_COUNT && visible.length; i++) {
         const el = visible.splice(Math.floor(Math.random() * visible.length), 1)[0];
-        light(el, 0.6 + Math.random() * 0.4, now);
+        twinkle(el, 0.55 + Math.random() * 0.45);
       }
     };
     const sync = () => {
@@ -195,7 +217,13 @@ export default function WordField({ seed = 7, className = "" }) {
     };
   }, []);
 
-  useEffect(() => () => cancelAnimationFrame(frame.current), []);
+  useEffect(() => {
+    const timers = pending.current;
+    return () => {
+      cancelAnimationFrame(frame.current);
+      timers.forEach(clearTimeout);
+    };
+  }, []);
 
   const onMove = (e) => {
     pointer.current = { x: e.clientX, y: e.clientY };
