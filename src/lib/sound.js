@@ -6,32 +6,6 @@ function audio() {
   return ctx;
 }
 
-// A soft, short "tick" synthesized on the fly, so no audio file is needed.
-// Higher pitch for switching to light, lower for dark.
-export function playToggleSound(theme) {
-  try {
-    const ac = audio();
-    const now = ac.currentTime;
-    const osc = ac.createOscillator();
-    const gain = ac.createGain();
-    const start = theme === "light" ? 1400 : 900;
-
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(start, now);
-    osc.frequency.exponentialRampToValueAtTime(start * 0.55, now + 0.08);
-
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.12, now + 0.005);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
-
-    osc.connect(gain).connect(ac.destination);
-    osc.start(now);
-    osc.stop(now + 0.1);
-  } catch {
-    // Audio is a nicety; ignore browsers that block or lack Web Audio.
-  }
-}
-
 // A short burst of TV static, about as long as the visual glitch.
 export function playGlitchSound() {
   try {

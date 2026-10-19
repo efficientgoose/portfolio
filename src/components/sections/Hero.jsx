@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { getCalApi } from "@calcom/embed-react";
 import { CalendarDays, Globe, Mail, MapPin, Moon, Shuffle, Sun } from "lucide-react";
 import { SiGithub } from "react-icons/si";
@@ -8,7 +9,7 @@ import GitHubGraph from "./GitHubGraph";
 import ViewCount from "../ui/ViewCount";
 import SongsOnRepeat from "./SongsOnRepeat";
 import RotatingRole from "../ui/RotatingRole";
-import { playGlitchSound, playToggleSound } from "../../lib/sound";
+import { playGlitchSound } from "../../lib/sound";
 import { ANCHORA_URL, CAL_LINK, EMAIL, GITHUB_URL, LINKEDIN_URL } from "../../data/links";
 
 // The shuffle button (or a click on the avatar) swaps between these.
@@ -28,23 +29,56 @@ const socials = [
 const iconButton =
   "relative z-10 w-fit cursor-pointer rounded-[6px] border border-transparent p-1.5 text-muted transition-colors duration-300 hover:border-border hover:bg-[color:var(--accent-tint)] hover:text-spot";
 
+// Lucide's Mail, filled: the body is solid and the flap is cut out in the hovered button's colour.
+function MailFilled({ className }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <rect x="2" y="4" width="20" height="16" rx="2" fill="currentColor" />
+      <path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" stroke="var(--muted-bg-hover)" />
+    </svg>
+  );
+}
+
 function ThemeToggle() {
   const [theme, setTheme] = useState(() => document.documentElement.dataset.theme || "dark");
+  const switching = useRef(false);
 
   const toggle = () => {
     const next = theme === "dark" ? "light" : "dark";
-    playToggleSound(next);
-    document.documentElement.dataset.theme = next;
     try {
       localStorage.setItem("theme", next);
     } catch {
       // Storage can be blocked; the toggle still works for this visit.
     }
-    setTheme(next);
+
+    const apply = () => {
+      document.documentElement.dataset.theme = next;
+      flushSync(() => setTheme(next));
+    };
+
+    // Wipe the new theme down from the top, as on the reference; switch instantly where
+    // view transitions are unsupported, motion is reduced, or a wipe is already running.
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!document.startViewTransition || reduced || switching.current) {
+      apply();
+      return;
+    }
+    switching.current = true;
+    document.startViewTransition(apply).finished.finally(() => {
+      switching.current = false;
+    });
   };
 
   return (
-    <button type="button" onClick={toggle} aria-label="Toggle theme" data-own-sound className={iconButton}>
+    <button type="button" onClick={toggle} aria-label="Toggle theme" className={iconButton}>
       {theme === "dark" ? <Sun className="size-[18px]" /> : <Moon className="size-[18px]" />}
     </button>
   );
@@ -258,16 +292,24 @@ export default function Hero() {
               data-cal-namespace="coffee"
               data-cal-link={CAL_LINK}
               data-cal-config='{"layout":"month_view","theme":"dark"}'
-              className="flex w-fit items-center gap-1.5 overflow-hidden rounded-[9px] bg-strong px-4 py-2.5 text-sm font-medium text-background transition-opacity duration-300 hover:opacity-80"
+              className="group flex w-fit items-center gap-1.5 overflow-hidden rounded-[9px] bg-strong px-4 py-2.5 text-sm font-medium text-background"
             >
-              <CalendarDays aria-hidden="true" className="size-4" />
+              {/* On hover the outline calendar drops out and a filled one drops in from above. */}
+              <span aria-hidden="true" className="relative size-4 overflow-hidden">
+                <CalendarDays className="absolute inset-0 size-4 transition-transform duration-300 ease-out group-hover:translate-y-full group-focus-visible:translate-y-full" />
+                <CalendarDays className="calendar-filled absolute inset-0 size-4 -translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-focus-visible:translate-y-0" />
+              </span>
               Grab a coffee
             </button>
             <a
               href={`mailto:${EMAIL}`}
-              className="flex w-fit items-center gap-1.5 overflow-hidden rounded-[9px] border border-border bg-muted-bg px-4 py-2.5 text-sm font-medium text-foreground transition-colors duration-300 hover:bg-muted-bg-hover"
+              className="group flex w-fit items-center gap-1.5 overflow-hidden rounded-[9px] border border-border bg-muted-bg px-4 py-2.5 text-sm font-medium text-foreground transition-colors duration-300 hover:bg-muted-bg-hover"
             >
-              <Mail aria-hidden="true" className="size-4" />
+              {/* Same roll as the calendar: the outline envelope drops out, a filled one drops in. */}
+              <span aria-hidden="true" className="relative size-4 overflow-hidden">
+                <Mail className="absolute inset-0 size-4 transition-transform duration-300 ease-out group-hover:translate-y-full group-focus-visible:translate-y-full" />
+                <MailFilled className="absolute inset-0 size-4 -translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-focus-visible:translate-y-0" />
+              </span>
               Send an email
             </a>
           </div>
