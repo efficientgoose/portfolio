@@ -114,6 +114,10 @@ function Rows({ rows, className, style, layerRef }) {
 }
 
 const EMPTY_MASK = "linear-gradient(transparent, transparent)";
+
+// Fine speckled grain, the same "dust" as the project hover backdrops. Tinted by the layer's colour.
+const DUST =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 2.2 -1.1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
 const SPOT_RADIUS = 110;
 const TRAIL_MS = 500;
 const TRAIL_STRENGTH = 0.35;
@@ -127,6 +131,7 @@ export default function WordField({ seed = 7, className = "" }) {
   const rows = useRows(seed);
   const boxRef = useRef(null);
   const layerRef = useRef(null);
+  const dustRef = useRef(null);
   const cursor = useRef(null); // current position while hovering
   const trail = useRef([]); // recent positions, each fading out over TRAIL_MS
   const frame = useRef(0);
@@ -142,9 +147,10 @@ export default function WordField({ seed = 7, className = "" }) {
     });
     if (cursor.current) layers.push(glow(cursor.current.x, cursor.current.y, 1));
     const mask = layers.length ? layers.join(", ") : EMPTY_MASK;
-    if (layerRef.current) {
-      layerRef.current.style.maskImage = mask;
-      layerRef.current.style.webkitMaskImage = mask;
+    for (const el of [layerRef.current, dustRef.current]) {
+      if (!el) continue;
+      el.style.maskImage = mask;
+      el.style.webkitMaskImage = mask;
     }
     frame.current = layers.length ? requestAnimationFrame(paint) : 0;
   };
@@ -183,6 +189,19 @@ export default function WordField({ seed = 7, className = "" }) {
       className={`relative w-full select-none overflow-hidden ${className}`}
     >
       <Rows rows={rows} className="text-muted opacity-50" />
+      {/* Yellow dust that hangs around the cursor and fades with the trail, behind the lit words. */}
+      <div
+        ref={dustRef}
+        className="pointer-events-none absolute inset-0 opacity-40"
+        style={{
+          backgroundColor: "var(--spot)",
+          WebkitMaskImage: EMPTY_MASK,
+          maskImage: EMPTY_MASK,
+          transform: "translateZ(0)",
+        }}
+      >
+        <div className="size-full bg-background" style={{ WebkitMaskImage: DUST, maskImage: DUST }} />
+      </div>
       {/* A yellow copy of the same drifting words, visible only where the cursor is or has just been.
           Its own compositing layer, so Chrome applies the mask over the animating rows. */}
       <Rows
