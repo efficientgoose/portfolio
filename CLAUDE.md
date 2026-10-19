@@ -1,0 +1,107 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Product context
+
+This is Ajinkya Kale's personal portfolio (ajkale.com): a single-page site for a backend engineer at Fleetx who is also co-founding **Anchora**, a study-abroad planner for students in India. The page has two jobs: show credible backend depth (real-time pipelines at Fleetx) and put Anchora front and centre as the thing he is building.
+
+The design is modelled on **rinkitadhana.com**: a calm, minimal, single 690px column framed by dashed rails, with a few playful but restrained interactions. It replaced an earlier "hacker terminal" theme (matrix rain, typewriter text, neon glows, fake terminal) that read as childish. Don't reintroduce any of that.
+
+## Commands
+
+```bash
+npm run dev       # Vite dev server (localhost:5173)
+npm run build     # production build; run before calling a task done
+npm run lint      # eslint .
+```
+
+There are no tests. Verify UI changes by looking at them (see **Verifying changes**).
+
+**Gotcha:** the Vite dev server does not reliably pick up changes to `tailwind.config.js`. If new colours or utilities don't appear in the browser but `npm run build` produces them, restart `npm run dev`.
+
+## Architecture
+
+Vite + React 19 + Tailwind CSS 3, plain JSX, no router. Deployed on Vercel.
+
+- `src/App.jsx` composes the page in order: `Navigation`, `Hero`, `Projects`, `Experience`, `Skills`, `Contact`, then `BackToTop` and `Loader` overlays.
+- `src/components/sections/` holds one component per section. `GitHubGraph.jsx` fetches live contributions from `github-contributions-api.jogruber.de` and renders nothing if the request fails.
+- `src/components/ui/Layout.jsx` holds the layout primitives: `Container` (the 690px railed column), `Hr` (full-width dashed rule), `SectionHeader`, `DotBand` (renders the full-width `WordField`), `FramedButton` and `ViewAll`. Build new sections from these.
+- `src/components/ui/` also has `WordField` (drifting word bands), `Loader` (first-load reveal), `RotatingRole` (subtitle cycling), and `BackToTop`.
+- `src/data/` holds all content: `timeline.js` (experience), `projects.js`, `techStack.js`, `links.js` (email, GitHub, LinkedIn, résumé, Anchora URLs). Change copy here, not in components.
+- `src/lib/sound.js` synthesises UI sounds with Web Audio (theme toggle tick, TV-static glitch). There are no audio files.
+- `index.html` sets the theme before paint (dark unless a saved choice says otherwise) and holds SEO meta.
+
+## Design system
+
+### Layout
+
+- One column, `max-w-[690px]`, centred, with dashed rails on both sides (`.rails`). Sections are separated by full-width dashed rules (`.dash-x`, 6px dash / 8px gap).
+- Section titles are 1.15rem bold, left-aligned in their own railed band.
+- The two word bands (top and bottom) are the only full-bleed elements; they run edge to edge with no rails.
+- The nav is sticky, translucent (`color-mix` background + `backdrop-blur`), and its links are centred: `/about /projects /experience /contact`.
+- The hero CTA buttons are centred. The GitHub graph is left-aligned with its stats on the right.
+
+### Colour
+
+- **Mostly black, white and grey.** Dark is the default regardless of system setting; light is opt-in via the toggle and remembered in `localStorage`.
+- The dark canvas is a soft black (`--background: #141412`), not pure black.
+- **One accent: gold/yellow**, used sparingly for interaction and emphasis. All tokens live at the top of `src/index.css`:
+  - `--spot` (`#d9b562`): the muted gold accent for the active nav item, link/icon hovers, "SAY HI" hover, the featured star, focus rings and selection.
+  - `--accent-tint` / `--accent-tint-hover`: a pale gold fill (14% / 24% of `--spot`). Primary buttons use this fill with `--spot` text, matching the active nav item. Never use a solid yellow fill for buttons.
+  - `--word-spot` (`#f5c542`): a brighter yellow reserved for the word-band hover trail.
+  - `--heat-0..4`: GitHub graph scale, from dark olive to soft gold.
+- Light theme swaps these for deeper ambers so they stay readable on white.
+- Status dots: green = Live, yellow = Building, grey = other. Always paired with a text label.
+- Project cards are the one place with other colours: each project has a 4-colour `palette` in `projects.js` for its hover sunburst (Anchora golds, Markiniser lavender/pink, Serene cream/sage/orange).
+- Things that must stay black and white: the photo-shuffle glitch, the page background (no grain or texture overlay).
+
+### Typography
+
+- Body and headings: **Figtree** (stands in for rinkitadhana's proprietary Instagram Sans), loaded from Google Fonts.
+- **Geist Mono** (self-hosted, `public/fonts/`) for the nav links and the word bands.
+- **Caveat** only for the handwritten "SAY HI" note.
+- Keep type small and calm: name 1.55rem, section titles 1.15rem, body ~15–16px.
+
+### Components and interactions
+
+- **Word bands:** rows of dim monospace tech words drift right-to-left (all rows the same direction, slightly different speeds). Words near the cursor turn `--word-spot` yellow in proportion to their distance, hold ~300ms, then ease out over ~1s, leaving a short tapering trail. No blinking, no full stops before words. Phones show 5 rows; larger screens show 9. Tuning constants (`RADIUS`, `HOLD_MS`, `FADE_MS`) are in `WordField.jsx`.
+- **Profile:** framed avatar; the shuffle icon (or clicking the photo) swaps to a different random photo with a ~300ms black-and-white glitch and a short TV-static sound. The subtitle alternates "Backend Engineer" / "Co-Founder, Anchora" with a blur fade.
+- **Icon buttons** (shuffle, theme toggle): muted at rest; on hover a pale gold tint with a gold icon.
+- **Projects:** Anchora is featured and spans the full first row (filled yellow star badge, landing-page screenshot of tryanchora.com); the rest pair up below. Each card is a nested-border frame with the screenshot rising from the bottom; on hover a curved sunburst (wide rays bowing gently outward over faint paper grain) fades in behind it.
+- **Experience:** expandable rows with company logos; the first row starts open.
+- **Loader:** on first load a dot grows into a single circle, then opens like a lens to reveal the page (~1.5s). One step only.
+- **Sounds:** short and quiet; audio must never be required to use the page.
+
+### Motion and accessibility
+
+- Every animation (loader, word drift, glitch, rotating subtitle) respects `prefers-reduced-motion`.
+- Keep keyboard focus visible (gold outline). Decorative layers are `aria-hidden` and `pointer-events: none` where they overlay content.
+- Must work at 390px phone width with no horizontal scroll.
+
+## Copy and content rules
+
+- Plain, first-person, factual. No "turning coffee into code" jokes, status gimmicks, or self-rated proficiency levels.
+- **Never fabricate numbers, metrics or project details.** Use only what Ajinkya has stated or what the repos/READMEs show. Current figures: Fleetx ingests **1B+** sensor data points a day from **350K+** vehicles; MAQ processed **1M+** documents/month at **99.9%** uptime; Rodic improved accuracy by **80%**.
+- Contact email is `ajinkya@tryanchora.com`.
+- Anchora facts must match the Anchora repo (`../Anchora`, especially `PRODUCT.md`): independent students in India applying to Germany; Atlas cites official sources, proposes changes the student accepts, and is off until consent.
+
+## Verifying changes
+
+Headless Chrome screenshots are the check for visual work. Look at the result before claiming something looks right:
+
+```bash
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --hide-scrollbars \
+  --window-size=1440,1000 --virtual-time-budget=8000 --screenshot=/tmp/shot.png http://localhost:5173/
+```
+
+- Headless Chrome enforces a minimum window width, so check mobile by loading the page in a 390px `<iframe>` (or with Puppeteer and a mobile viewport), and confirm `scrollWidth === clientWidth`.
+- Hover states, animations and timing (word trail, glitch, loader) need Puppeteer to move the mouse and capture frames over time; a single static screenshot won't show them.
+- Sounds can't be verified headless; say so rather than claiming they work.
+
+## Working rules
+
+- Change only what was asked. If a request is about one section, don't restyle a neighbouring one.
+- Keep changes reversible and uncommitted until asked; when asked to ship, use a feature branch and a PR into `main`.
+- Run `npm run lint` and `npm run build` before declaring a task done.
+- New photos, logos and screenshots go in `public/` (`public/projects/`, `public/logos/`); keep images as WebP where possible.

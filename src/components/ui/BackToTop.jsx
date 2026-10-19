@@ -23,7 +23,7 @@ export default function BackToTop() {
         visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-10 opacity-0",
       )}
     >
-      <span className="flex items-center justify-center rounded-[8px] border border-border bg-non-hover p-1.5 text-background transition duration-300 group-hover:bg-hover">
+      <span className="flex items-center justify-center rounded-[8px] border border-border bg-[color:var(--accent-tint)] p-1.5 text-spot transition duration-300 group-hover:bg-[color:var(--accent-tint-hover)]">
         <ArrowUp className="size-5" />
       </span>
     </button>

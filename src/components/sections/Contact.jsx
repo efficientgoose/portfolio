@@ -24,7 +24,7 @@ function CopyEmail() {
           type="button"
           onClick={copy}
           aria-label={copied ? "Email copied" : "Copy email"}
-          className="flex shrink-0 items-center gap-1 rounded-[6px] px-2 py-1 text-sm text-muted-foreground transition-colors duration-300 hover:bg-muted-bg hover:text-title"
+          className="flex shrink-0 items-center gap-1 rounded-[6px] px-2 py-1 text-sm text-muted-foreground transition-colors duration-300 hover:bg-muted-bg hover:text-spot"
         >
           {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
           {copied ? "Copied" : "Copy"}
@@ -42,7 +42,7 @@ export default function Contact() {
         <div className="bg-striped flex flex-col gap-3 p-4 sm:flex-row sm:items-stretch sm:p-6">
           <CopyEmail />
           <a href={`mailto:${EMAIL}`} className="group w-full shrink-0 select-none rounded-[10px] border border-border bg-background p-[2px] sm:w-[140px]">
-            <span className="flex h-full w-full items-center justify-center gap-1.5 rounded-[8px] border border-border bg-non-hover px-4 py-1.5 text-background transition duration-300 group-hover:bg-hover sm:py-0">
+            <span className="flex h-full w-full items-center justify-center gap-1.5 rounded-[8px] border border-border bg-[color:var(--accent-tint)] px-4 py-1.5 text-spot transition duration-300 group-hover:bg-[color:var(--accent-tint-hover)] sm:py-0">
               <Mail aria-hidden="true" className="size-4" />
               <span className="text-[0.95rem] font-medium">Send email</span>
             </span>

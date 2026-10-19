@@ -22,7 +22,7 @@ const socials = [
 ];
 
 const iconButton =
-  "relative z-10 w-fit cursor-pointer rounded-[6px] border border-transparent p-1.5 text-muted transition-colors duration-300 hover:border-border hover:bg-muted-bg hover:text-muted-foreground";
+  "relative z-10 w-fit cursor-pointer rounded-[6px] border border-transparent p-1.5 text-muted transition-colors duration-300 hover:border-border hover:bg-[color:var(--accent-tint)] hover:text-spot";
 
 function ThemeToggle() {
   const [theme, setTheme] = useState(() => document.documentElement.dataset.theme || "dark");
@@ -199,7 +199,7 @@ export default function Hero() {
         <Container>
           <div className="flex flex-col gap-2 leading-[1.6]">
             <p>
-              Hey, I’m Ajinkya, a backend engineer at Fleetx, where I build the real-time pipelines that take in 20B+
+              Hey, I’m Ajinkya, a backend engineer at Fleetx, where I build the real-time pipelines that take in 1B+
               sensor readings a day from 350K+ vehicles, with Netty servers, Kafka and Spark streams, and Spring Boot
               services.
             </p>
@@ -209,10 +209,10 @@ export default function Hero() {
             </p>
           </div>
 
-          <div className="flex select-none gap-2 pt-4.5">
+          <div className="flex select-none justify-center gap-2 pt-4.5">
             <a
               href={`mailto:${EMAIL}`}
-              className="flex w-fit items-center gap-1.5 overflow-hidden rounded-[9px] bg-non-hover px-2.5 py-[7px] text-sm font-medium text-background transition-colors duration-300 hover:bg-hover sm:py-1.5"
+              className="flex w-fit items-center gap-1.5 overflow-hidden rounded-[9px] bg-[color:var(--accent-tint)] px-2.5 py-[7px] text-sm font-medium text-spot transition-colors duration-300 hover:bg-[color:var(--accent-tint-hover)] sm:py-1.5"
             >
               <Mail aria-hidden="true" className="size-4" />
               Send an email
@@ -239,10 +239,12 @@ export default function Hero() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex select-none items-center rounded-[6px] bg-muted-bg px-2 py-1 transition-colors duration-200 hover:bg-muted-bg-hover"
+                  className="group flex select-none items-center rounded-[6px] bg-muted-bg px-2 py-1 transition-colors duration-200 hover:bg-muted-bg-hover"
                 >
-                  <Icon aria-hidden="true" className="size-4 text-foreground" />
-                  <span className="ml-1.5 text-sm font-medium text-foreground">{label}</span>
+                  <Icon aria-hidden="true" className="size-4 text-foreground transition-colors group-hover:text-spot" />
+                  <span className="ml-1.5 text-sm font-medium text-foreground transition-colors group-hover:text-spot">
+                    {label}
+                  </span>
                 </a>
               ))}
             </div>
