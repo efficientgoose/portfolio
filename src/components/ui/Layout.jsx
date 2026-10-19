@@ -19,7 +19,8 @@ export function Hr() {
 export function SectionHeader({ id, children }) {
   return (
     <>
-      <Container>
+      {/* Extra room above each title separates sections without adding more rules. */}
+      <Container className="px-3 pb-4 pt-10 sm:pt-14">
         <h2 id={id} className="text-[1.15rem] font-bold leading-tight text-title">
           {children}
         </h2>
@@ -57,7 +58,7 @@ export function FramedButton({ href, children, external = true, icon: Icon = Arr
 export function ViewAll({ href }) {
   return (
     <>
-      <Container className="p-2">
+      <Container className="px-2 py-5">
         <div className="flex items-center justify-center">
           <FramedButton href={href}>View All</FramedButton>
         </div>

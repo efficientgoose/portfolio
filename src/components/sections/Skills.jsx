@@ -5,7 +5,7 @@ export default function Skills() {
   return (
     <section id="skills" aria-labelledby="skills-title" className="scroll-mt-12">
       <SectionHeader id="skills-title">Skills &amp; Technologies</SectionHeader>
-      <Container>
+      <Container className="py-6">
         <ul className="flex flex-wrap items-center justify-center gap-[8px]">
           {skills.map(({ name, icon: Icon }) => (
             <li

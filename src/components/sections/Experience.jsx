@@ -16,7 +16,7 @@ function ExperienceRow({ job, defaultOpen }) {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls={panelId}
-        className="group flex w-full cursor-pointer select-none flex-row justify-between gap-4 p-3 text-left transition-colors duration-300 hover:bg-bg-hover"
+        className="group flex w-full cursor-pointer select-none flex-row justify-between gap-4 px-3 py-4 text-left transition-colors duration-300 hover:bg-bg-hover"
       >
         <span className="flex min-w-0 flex-1 items-center gap-3">
           <span className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-[10px] border border-border bg-background p-[2px] sm:size-12">
@@ -44,8 +44,8 @@ function ExperienceRow({ job, defaultOpen }) {
 
       <div id={panelId} className={cn("grid transition-[grid-template-rows] duration-300 ease-out", open ? "grid-rows-[1fr]" : "grid-rows-[0fr]")}>
         <div className="overflow-hidden">
-          <div className="px-3 pb-4 pt-1">
-            <ul className="flex flex-col gap-2.5 pl-1">
+          <div className="px-3 pb-6 pt-2">
+            <ul className="flex flex-col gap-3 pl-1">
               {job.highlights.map((point) => (
                 <li key={point} className="flex gap-3 text-[0.95rem] leading-[1.55] text-foreground">
                   <span aria-hidden="true" className="mt-[9px] size-[5px] shrink-0 rounded-full bg-muted" />
@@ -54,7 +54,7 @@ function ExperienceRow({ job, defaultOpen }) {
               ))}
             </ul>
             {job.stack.length > 0 && (
-              <div className="mt-4 flex flex-wrap gap-2">
+              <div className="mt-5 flex flex-wrap gap-2">
                 {job.stack.map((tech) => (
                   <span key={tech} className="rounded-[6px] border border-border bg-muted-bg px-2 py-0.5 text-sm text-foreground">
                     {tech}

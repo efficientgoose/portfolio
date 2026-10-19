@@ -68,12 +68,12 @@ function StatusDot({ status }) {
 
 function ProjectCard({ project, wide }) {
   return (
-    <div className="relative z-10 p-3">
+    <div className="relative z-10 p-4 sm:p-5">
       <a
         href={project.href}
         target="_blank"
         rel="noopener noreferrer"
-        className="group flex w-full cursor-pointer flex-col gap-2"
+        className="group flex w-full cursor-pointer flex-col gap-3"
       >
         <div className="rounded-[10px] border border-border p-[4px]">
           <div
@@ -103,7 +103,7 @@ function ProjectCard({ project, wide }) {
             )}
           </div>
         </div>
-        <div className="flex flex-col gap-1 px-2">
+        <div className="flex flex-col gap-1.5 px-2">
           <div className="flex items-center justify-between">
             <h3 className="text-[1.10rem] font-bold leading-[1.10] text-title">{project.name}</h3>
             <StatusDot status={project.status} />
