@@ -2,10 +2,10 @@ import { ArrowUpRight } from "lucide-react";
 import { cn } from "../../lib/cn";
 import WordField from "./WordField";
 
-// The 690px column with dashed rails on both sides.
+// The 780px column with dashed rails on both sides.
 export function Container({ children, className, ...props }) {
   return (
-    <div className={cn("rails relative mx-2 max-w-[690px] p-3 sm:mx-8 md:mx-auto", className)} {...props}>
+    <div className={cn("rails relative mx-2 max-w-[780px] p-3 sm:mx-8 md:mx-auto", className)} {...props}>
       {children}
     </div>
   );

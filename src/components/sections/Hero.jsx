@@ -228,53 +228,53 @@ export default function Hero() {
       </div>
 
       <div className="relative">
-        <Container>
-          <div className="flex flex-col gap-2 leading-[1.6]">
+        <Container className="pb-8 pt-3 sm:pb-10 sm:pt-4">
+          <div className="flex flex-col gap-3 leading-[1.6]">
             <p>
               Hey, I'm Ajinkya!
             </p>
             <p>
-              I'm a backend engineer at <strong>Fleetx</strong>, where I build and scale real-time systems processing{" "}
-              <strong>1B+ sensor readings daily from 350K+ vehicles</strong>. My work involves everything from
-              Netty-based TCP servers and Kafka pipelines to Spark streaming and Spring Boot services.
+              I'm a backend engineer at <strong>Fleetx</strong>, building and scaling real-time systems that process{" "}
+              <strong>1B+ sensor readings daily from 350K+ vehicles</strong>. My work spans Netty-based TCP servers,
+              Kafka pipelines, Spark streaming, and Spring Boot services.
             </p>
             <p>
-              I'm also the co-founder of <strong>Anchora</strong>, an AI-powered study-abroad platform built to simplify
-              the journey for students in India. I'm building it end-to-end, from designing the PostgreSQL architecture
-              and backend systems to developing its AI assistant.
+              I also co-founded <strong>Anchora</strong>, an AI-powered study-abroad platform that simplifies the
+              journey for students in India. I'm building it end-to-end, from its PostgreSQL architecture and backend
+              systems to its AI assistant.
             </p>
             <p>
-              I enjoy solving complex engineering problems, building products from scratch, and turning ambitious
-              ideas into things people can actually use.
+              I enjoy solving complex engineering problems, building products from scratch, and turning ideas into
+              things people can use.
             </p>
           </div>
 
-          <div className="flex select-none justify-center gap-2 pt-4.5">
+          <div className="flex flex-wrap select-none justify-center gap-3 pt-8 sm:pt-10">
             {/* Opens the Cal.com booking page as a pop-up over the site (wired in useCalPopup). */}
             <button
               type="button"
               data-cal-namespace="coffee"
               data-cal-link={CAL_LINK}
               data-cal-config='{"layout":"month_view","theme":"dark"}'
-              className="flex w-fit items-center gap-1.5 overflow-hidden rounded-[9px] bg-strong px-2.5 py-[7px] text-sm font-medium text-background transition-opacity duration-300 hover:opacity-80 sm:py-1.5"
+              className="flex w-fit items-center gap-1.5 overflow-hidden rounded-[9px] bg-strong px-4 py-2.5 text-sm font-medium text-background transition-opacity duration-300 hover:opacity-80"
             >
               <CalendarDays aria-hidden="true" className="size-4" />
               Grab a Coffee
             </button>
             <a
               href={`mailto:${EMAIL}`}
-              className="flex w-fit items-center gap-1.5 overflow-hidden rounded-[9px] border border-border bg-muted-bg px-2.5 py-[7px] text-sm font-medium text-foreground transition-colors duration-300 hover:bg-muted-bg-hover sm:py-1.5"
+              className="flex w-fit items-center gap-1.5 overflow-hidden rounded-[9px] border border-border bg-muted-bg px-4 py-2.5 text-sm font-medium text-foreground transition-colors duration-300 hover:bg-muted-bg-hover"
             >
               <Mail aria-hidden="true" className="size-4" />
               Send an email
             </a>
           </div>
 
-          <div className="flex flex-col gap-2 py-4.5">
+          <div className="flex flex-col gap-3 pb-8 pt-8 sm:pb-10 sm:pt-10">
             <p>
               Here are my <span className="font-medium text-strong">socials</span>
             </p>
-            <div className="flex flex-wrap items-center gap-[7px]">
+            <div className="flex flex-wrap items-center gap-2.5">
               {socials.map(({ label, href, icon: Icon }) => (
                 <a
                   key={label}
