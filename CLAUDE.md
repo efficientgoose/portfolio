@@ -31,7 +31,7 @@ Vite + React 19 + Tailwind CSS 3, plain JSX, no router. Deployed on Vercel.
 - `src/components/ui/Layout.jsx` holds the layout primitives: `Container` (the 690px railed column), `Hr` (full-width dashed rule), `SectionHeader`, `DotBand` (renders the full-width `WordField`), `FramedButton` and `ViewAll`. Build new sections from these.
 - `src/components/ui/` also has `WordField` (drifting word bands), `Loader` (first-load reveal), `RotatingRole` (subtitle cycling), and `BackToTop`.
 - `src/data/` holds all content: `timeline.js` (experience), `projects.js`, `techStack.js`, `links.js` (email, GitHub, LinkedIn, résumé, Anchora URLs). Change copy here, not in components.
-- `src/lib/sound.js` synthesises UI sounds with Web Audio (theme toggle tick, TV-static glitch). There are no audio files.
+- `src/lib/sound.js` synthesises UI sounds with Web Audio (the shared button click, TV-static glitch). There are no audio files.
 - `index.html` sets the theme before paint (dark unless a saved choice says otherwise) and holds SEO meta.
 
 ## Design system
