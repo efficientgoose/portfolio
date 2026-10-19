@@ -1,74 +1,25 @@
-import React, { useEffect, useState } from "react";
 import Navigation from "./components/layout/Navigation";
-import Footer from "./components/layout/Footer";
-import Hero from "./components/sections/Hero.jsx";
-import Skills from "./components/sections/Skills";
+import Hero from "./components/sections/Hero";
+import Projects from "./components/sections/Projects";
 import Experience from "./components/sections/Experience";
+import Skills from "./components/sections/Skills";
 import Contact from "./components/sections/Contact";
-import Terminal from "./components/terminal/Terminal";
-import BackgroundEffects from "./components/effects/BackgroundEffects";
-import { useTerminal } from "./hooks/useTerminal";
-import LoadingScreen from "./components/effects/LoadingScreen";
+import BackToTop from "./components/ui/BackToTop";
+import Loader from "./components/ui/Loader";
 
 export default function Portfolio() {
-  const {
-    terminalOpen,
-    setTerminalOpen,
-    terminalHistory,
-    currentCommand,
-    setCurrentCommand,
-    executeCommand,
-    terminalEndRef,
-  } = useTerminal();
-
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (isLoading) {
-    return <LoadingScreen />;
-  }
-
   return (
-    <div className="min-h-screen bg-black text-gray-300 font-mono relative overflow-hidden">
-      <style>{`
-        html { scroll-behavior: smooth; }
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-        }
-      `}</style>
-
-      <BackgroundEffects />
-
-      <div className="relative z-10">
-        <Navigation />
-        <Hero onTerminalToggle={() => setTerminalOpen(!terminalOpen)} />
-        <Skills />
+    <div className="flex min-h-screen flex-col overflow-x-clip bg-background">
+      <Navigation />
+      <Hero />
+      <main>
+        <Projects />
         <Experience />
-        {/* <Projects /> */}
+        <Skills />
         <Contact />
-        <Footer />
-      </div>
-
-      <Terminal
-        terminalOpen={terminalOpen}
-        setTerminalOpen={setTerminalOpen}
-        terminalHistory={terminalHistory}
-        currentCommand={currentCommand}
-        setCurrentCommand={setCurrentCommand}
-        executeCommand={executeCommand}
-        terminalEndRef={terminalEndRef}
-      />
+      </main>
+      <BackToTop />
+      <Loader />
     </div>
   );
 }
-
-
-
