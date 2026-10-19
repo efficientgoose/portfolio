@@ -46,7 +46,7 @@ export function FramedButton({ href, children, external = true, icon: Icon = Arr
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       className={cn("group w-fit select-none rounded-[10px] border border-border p-[2px]", className)}
     >
-      <span className="flex h-full w-full items-center justify-center gap-1 rounded-[8px] border border-border bg-non-hover px-2.5 py-1 text-background transition duration-300 group-hover:bg-hover">
+      <span className="flex h-full w-full items-center justify-center gap-1 rounded-[8px] border border-border bg-[color:var(--accent-tint)] px-2.5 py-1 text-spot transition duration-300 group-hover:bg-[color:var(--accent-tint-hover)]">
         <span className="text-[0.95rem] font-medium">{children}</span>
         {Icon && <Icon aria-hidden="true" className="size-4 transition-transform duration-300 group-hover:scale-125" />}
       </span>

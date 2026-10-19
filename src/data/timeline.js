@@ -24,7 +24,7 @@ export const experiences = [
     period: "Aug, 2025 - Present",
     location: "Gurgaon, India",
     highlights: [
-      "Engineering backend systems that ingest 20B+ sensor data points a day from 350K+ vehicles.",
+      "Engineering backend systems that ingest 1B+ sensor data points a day from 350K+ vehicles.",
       "Built low-level Netty servers that decode hexdump packets from IoT devices.",
       "Built real-time streaming pipelines on Kafka and Spark.",
       "Developed Spring Boot microservices with Redis for sub-second vehicle tracking and driver-behaviour analytics.",

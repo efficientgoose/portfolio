@@ -109,7 +109,7 @@ function ProjectCard({ project, wide }) {
             <StatusDot status={project.status} />
           </div>
           <p className="text-sm text-muted-foreground">{project.description}</p>
-          <div className="flex select-none items-center gap-1 text-sm text-muted-foreground transition-colors duration-300 group-hover:text-title">
+          <div className="flex select-none items-center gap-1 text-sm text-muted-foreground transition-colors duration-300 group-hover:text-spot">
             View Project
             <ArrowUpRight aria-hidden="true" className="size-4" />
           </div>

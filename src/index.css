@@ -22,17 +22,19 @@
   --muted: #5d5d5d;
   --muted-foreground: #989898;
   --strong: #ffffff;
-  --non-hover: #c7c7c7;
-  --hover: #f5f5f5;
+  /* Primary buttons: a pale gold tint with gold text, like the active nav item. */
+  --accent-tint: color-mix(in srgb, var(--spot) 14%, transparent);
+  --accent-tint-hover: color-mix(in srgb, var(--spot) 24%, transparent);
   --muted-bg: #222220;
   --muted-bg-hover: #30302e;
   --grid: #303030;
   --heat-0: #222220;
-  --heat-1: #3d3d3b;
-  --heat-2: #626260;
-  --heat-3: #9b9b99;
-  --heat-4: #e8e8e6;
-  --spot: #f5c542;
+  --heat-1: #3b3424;
+  --heat-2: #5e5232;
+  --heat-3: #8f7a45;
+  --heat-4: #c4a65a;
+  --spot: #d9b562;
+  --word-spot: #f5c542; /* brighter yellow for the word-band trail */
 }
 
 :root[data-theme="light"] {
@@ -47,17 +49,18 @@
   --muted: #9f9fa9;
   --muted-foreground: #71717b;
   --strong: #000000;
-  --non-hover: #52525c;
-  --hover: #27272a;
+  --accent-tint: color-mix(in srgb, var(--spot) 14%, transparent);
+  --accent-tint-hover: color-mix(in srgb, var(--spot) 24%, transparent);
   --muted-bg: #f2f2f2;
   --muted-bg-hover: #e8e8e8;
   --grid: #e1e1e1;
   --heat-0: #ebebeb;
-  --heat-1: #c6c6c6;
-  --heat-2: #9a9a9a;
-  --heat-3: #626262;
-  --heat-4: #2a2a2a;
+  --heat-1: #f6e3a8;
+  --heat-2: #e8c35a;
+  --heat-3: #c79a26;
+  --heat-4: #8a6115;
   --spot: #b7791f;
+  --word-spot: #b7791f;
 }
 
 html {
@@ -75,12 +78,12 @@ body {
 }
 
 ::selection {
-  background: var(--muted-bg-hover);
+  background: color-mix(in srgb, var(--spot) 35%, transparent);
   color: var(--title);
 }
 
 :focus-visible {
-  outline: 1.5px solid var(--muted-foreground);
+  outline: 1.5px solid var(--spot);
   outline-offset: 2px;
 }
 
@@ -271,6 +274,12 @@ body {
 
 .word-drift {
   animation: word-drift 80s linear infinite;
+}
+
+/* Field words: dim at rest. The cursor sets a brighter colour inline, which then eases back to this. */
+.field-word {
+  color: var(--muted);
+  opacity: 0.5;
 }
 
 @media (prefers-reduced-motion: reduce) {

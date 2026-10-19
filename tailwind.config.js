@@ -11,12 +11,11 @@ export default {
         muted: "var(--muted)",
         "muted-foreground": "var(--muted-foreground)",
         strong: "var(--strong)",
-        "non-hover": "var(--non-hover)",
-        hover: "var(--hover)",
         "muted-bg": "var(--muted-bg)",
         "muted-bg-hover": "var(--muted-bg-hover)",
         "bg-hover": "var(--bg-hover)",
         "bg-hover-fg": "var(--bg-hover-fg)",
+        spot: "var(--spot)",
       },
       fontFamily: {
         sans: ['"Figtree"', '"Segoe UI"', "system-ui", "sans-serif"],

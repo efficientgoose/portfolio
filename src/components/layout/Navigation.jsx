@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
 import { cn } from "../../lib/cn";
 import { Container, Hr } from "../ui/Layout";
-import { RESUME_URL } from "../../data/links";
 
 const links = [
   { href: "#about", label: "about" },
   { href: "#projects", label: "projects" },
   { href: "#experience", label: "experience" },
-  { href: "#skills", label: "skills" },
-  { href: RESUME_URL, label: "resume", external: true },
   { href: "#contact", label: "contact" },
 ];
 
@@ -54,7 +51,7 @@ export default function Navigation() {
                 aria-current={isActive ? "location" : undefined}
                 className={cn(
                   "shrink-0 rounded-[6px] px-2 py-1 font-mono text-[13px] leading-5 transition-colors duration-300",
-                  isActive ? "bg-muted-bg text-title" : "text-muted-foreground hover:text-title",
+                  isActive ? "bg-muted-bg text-spot" : "text-muted-foreground hover:text-spot",
                 )}
               >
                 /{link.label}
