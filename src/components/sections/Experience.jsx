@@ -1,124 +1,90 @@
-import { Briefcase } from "lucide-react";
-import { timeline } from "../../data/timeline";
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
+import { Container, Hr, SectionHeader, ViewAll } from "../ui/Layout";
+import { cn } from "../../lib/cn";
+import { experiences } from "../../data/timeline";
+import { LINKEDIN_URL } from "../../data/links";
 
-export default function Experience() {
-  const getBadgeClasses = (color) => {
-    const colors = {
-      green: "text-green-400 bg-green-500/10 border-green-500/30",
-      cyan: "text-cyan-400 bg-cyan-500/10 border-cyan-500/30",
-      purple: "text-purple-400 bg-purple-500/10 border-purple-500/30",
-      amber: "text-amber-400 bg-amber-500/10 border-amber-500/30",
-    };
-    return colors[color] || colors.green;
-  };
+function ExperienceRow({ job, defaultOpen }) {
+  const [open, setOpen] = useState(defaultOpen);
+  const panelId = `exp-${job.company.replace(/\W+/g, "-").toLowerCase()}`;
 
   return (
-    <section id="experience" className="py-20 px-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Section Header */}
-        <div className="flex items-center gap-3 mb-8">
-          <Briefcase size={25} className="text-green-400" />
-          <h2 className="text-2xl font-bold text-gray-100">
-            Experience + Education
-          </h2>
-          <span className="ml-auto text-xs text-gray-400">
-            // career trajectory
+    <div className="m-1">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls={panelId}
+        className="group flex w-full cursor-pointer select-none flex-row justify-between gap-4 p-3 text-left transition-colors duration-300 hover:bg-bg-hover"
+      >
+        <span className="flex min-w-0 flex-1 items-center gap-3">
+          <span className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-[10px] border border-border bg-background p-[2px] sm:size-12">
+            <img src={job.logo} alt="" draggable="false" className="h-full w-full rounded-[8px] border border-border bg-white object-contain p-1" />
           </span>
-        </div>
+          <span className="flex min-w-0 flex-col items-start gap-1">
+            <span className="flex flex-wrap items-center gap-2">
+              <span className="text-[1.05rem] font-semibold leading-[0.9] text-title sm:text-[1.20rem]">{job.company}</span>
+              <span className="rounded-[4px] border border-border px-1.5 text-xs leading-5 text-muted-foreground">{job.type}</span>
+            </span>
+            <span className="text-xs text-muted-foreground sm:text-sm">{job.role}</span>
+          </span>
+        </span>
+        <span className="flex items-start gap-3">
+          <span className="flex flex-col items-end gap-1">
+            <span className="whitespace-nowrap text-xs font-medium text-title sm:text-sm">{job.period}</span>
+            {job.location && <span className="text-xs text-muted-foreground sm:text-sm">{job.location}</span>}
+          </span>
+          <ChevronDown
+            aria-hidden="true"
+            className={cn("hidden size-4 text-muted-foreground transition-transform duration-300 sm:block", open && "rotate-180")}
+          />
+        </span>
+      </button>
 
-        {/* Timeline Container */}
-        <div className="relative">
-          <div className="absolute left-8 top-0 bottom-0 w-px bg-gradient-to-b from-green-500/50 via-green-500/20 to-transparent" />
-
-          <div className="space-y-8">
-            {timeline.map((job, idx) => (
-              <div key={idx} className="relative pl-20">
-                {/* Timeline Dot */}
-                <div
-                  className={`absolute left-6 top-2 w-5 h-5 rounded-full border-2 flex items-center justify-center
-                    ${
-                      job.status === "current"
-                        ? "bg-green-500 border-green-400 shadow-lg shadow-green-500/50"
-                        : job.status === "education"
-                        ? "bg-amber-500 border-amber-400 shadow-lg shadow-amber-500/50"
-                        : "bg-gray-900 border-green-500/30"
-                    }
-                  `}
-                >
-                  {(job.status === "current" || job.status === "education") && (
-                    <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
-                  )}
-                </div>
-
-                {/* Card */}
-                <div
-                  className={`bg-white/5 border border-gray-800 rounded-lg p-5 transition-all group ${
-                    job.status === "education"
-                      ? "hover:border-amber-500/30"
-                      : "hover:border-green-500/30"
-                  }`}
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <h3
-                        className={`text-lg font-bold text-gray-100 transition-colors ${
-                          job.status === "education"
-                            ? "group-hover:text-amber-400"
-                            : "group-hover:text-green-400"
-                        }`}
-                      >
-                        {job.role}
-                      </h3>
-                      <div
-                        className={`text-sm font-mono ${
-                          job.status === "education"
-                            ? "text-amber-400"
-                            : "text-green-400"
-                        }`}
-                      >
-                        {job.company}
-                      </div>
-                    </div>
-
-                    {/* Status Badge */}
-                    {job.badge && (
-                      <span
-                        className={`text-xs px-2 py-1 rounded border ${getBadgeClasses(
-                          job.badgeColor
-                        )}`}
-                      >
-                        {job.badge}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="text-xs text-gray-400 mb-3 font-mono">
-                    {job.duration}
-                  </div>
-
-                  <p className="text-sm text-gray-400 leading-relaxed">
-                    {job.description}
-                  </p>
-
-                  {/* Footer Tag */}
-                  {job.footer && (
-                    <div className="mt-4 pt-4 border-t border-gray-800 flex items-center gap-2 text-[10px] text-gray-400">
-                      <div
-                        className={`w-1 h-1 rounded-full animate-pulse ${
-                          job.status === "education"
-                            ? "bg-amber-400"
-                            : "bg-green-400"
-                        }`}
-                      />
-                      <span>// {job.footer}</span>
-                    </div>
-                  )}
-                </div>
+      <div id={panelId} className={cn("grid transition-[grid-template-rows] duration-300 ease-out", open ? "grid-rows-[1fr]" : "grid-rows-[0fr]")}>
+        <div className="overflow-hidden">
+          <div className="px-3 pb-4 pt-1">
+            <ul className="flex flex-col gap-2.5 pl-1">
+              {job.highlights.map((point) => (
+                <li key={point} className="flex gap-3 text-[0.95rem] leading-[1.55] text-foreground">
+                  <span aria-hidden="true" className="mt-[9px] size-[5px] shrink-0 rounded-full bg-muted" />
+                  {point}
+                </li>
+              ))}
+            </ul>
+            {job.stack.length > 0 && (
+              <div className="mt-4 flex flex-wrap gap-2">
+                {job.stack.map((tech) => (
+                  <span key={tech} className="rounded-[6px] border border-border bg-muted-bg px-2 py-0.5 text-sm text-foreground">
+                    {tech}
+                  </span>
+                ))}
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+export default function Experience() {
+  return (
+    <section id="experience" aria-labelledby="experience-title" className="scroll-mt-12">
+      <SectionHeader id="experience-title">Experiences</SectionHeader>
+      <Container className="p-0">
+        <div className="flex flex-col">
+          {experiences.map((job, i) => (
+            <div key={job.company}>
+              <ExperienceRow job={job} defaultOpen={i === 0} />
+              {i < experiences.length - 1 && <Hr />}
+            </div>
+          ))}
+        </div>
+      </Container>
+      <Hr />
+      <ViewAll href={LINKEDIN_URL} />
     </section>
   );
 }

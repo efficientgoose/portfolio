@@ -2,21 +2,286 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/fonts/GeistMono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+/* Tokens follow rinkitadhana.com, with the dark canvas lifted slightly to a soft black. */
+:root {
+  color-scheme: dark;
+  --background: #141412;
+  --foreground: #d4d4d4;
+  --border: #313131;
+  --title: #ebebeb;
+  --dot: #5e5e5e;
+  --bg-hover: #1a1a18;
+  --bg-hover-fg: #1f1f1d;
+  --muted: #5d5d5d;
+  --muted-foreground: #989898;
+  --strong: #ffffff;
+  --non-hover: #c7c7c7;
+  --hover: #f5f5f5;
+  --muted-bg: #222220;
+  --muted-bg-hover: #30302e;
+  --grid: #303030;
+  --heat-0: #222220;
+  --heat-1: #3d3d3b;
+  --heat-2: #626260;
+  --heat-3: #9b9b99;
+  --heat-4: #e8e8e6;
+  --spot: #f5c542;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --background: #ffffff;
+  --foreground: #424242;
+  --border: #d1d1d1;
+  --title: #333333;
+  --dot: #9f9fa9;
+  --bg-hover: #f5f5f5;
+  --bg-hover-fg: #fafafa;
+  --muted: #9f9fa9;
+  --muted-foreground: #71717b;
+  --strong: #000000;
+  --non-hover: #52525c;
+  --hover: #27272a;
+  --muted-bg: #f2f2f2;
+  --muted-bg-hover: #e8e8e8;
+  --grid: #e1e1e1;
+  --heat-0: #ebebeb;
+  --heat-1: #c6c6c6;
+  --heat-2: #9a9a9a;
+  --heat-3: #626262;
+  --heat-4: #2a2a2a;
+  --spot: #b7791f;
+}
+
+html {
   scroll-behavior: smooth;
+  background-color: var(--background);
 }
 
 body {
   margin: 0;
-  font-family: 'Courier New', Courier, monospace;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: "Figtree", "Segoe UI", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
 }
 
-html{
-  scroll-behavior: smooth;
+::selection {
+  background: var(--muted-bg-hover);
+  color: var(--title);
+}
+
+:focus-visible {
+  outline: 1.5px solid var(--muted-foreground);
+  outline-offset: 2px;
+}
+
+@layer components {
+  /* Dashed rails on both sides of the 690px column (6px dash, 8px gap). */
+  .rails {
+    background-image: repeating-linear-gradient(to bottom, var(--border) 0px, var(--border) 6px, transparent 6px, transparent 14px),
+      repeating-linear-gradient(to bottom, var(--border) 0px, var(--border) 6px, transparent 6px, transparent 14px);
+    background-size: 1px 100%, 1px 100%;
+    background-position: left top, right top;
+    background-repeat: no-repeat;
+  }
+
+  .dash-x {
+    background-image: repeating-linear-gradient(to right, var(--border) 0px, var(--border) 6px, transparent 6px, transparent 14px);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+  }
+
+  .dash-y {
+    background-image: repeating-linear-gradient(to bottom, var(--border) 0px, var(--border) 6px, transparent 6px, transparent 14px);
+    background-size: 1px 100%;
+    background-repeat: no-repeat;
+  }
+
+  .bg-dot-grid {
+    background-image: radial-gradient(var(--grid) 1.25px, transparent 1.25px);
+    background-size: 7.5px 7.5px;
+  }
+
+  .bg-striped {
+    background-image: repeating-linear-gradient(-45deg, var(--grid) 0, var(--grid) 1px, transparent 1px, transparent 6px);
+    transform: translateZ(0);
+  }
+
+  .font-hand {
+    font-family: "Caveat", cursive;
+  }
+}
+
+/* "Say hi" note: the words wiggle and brighten, a scribble draws underneath, and the arrow redraws toward the photo. */
+@keyframes say-hi-wiggle {
+  0%, 100% { transform: scale(1.12) rotate(0deg); }
+  25% { transform: scale(1.12) rotate(-6deg); }
+  50% { transform: scale(1.12) rotate(4deg); }
+  75% { transform: scale(1.12) rotate(-3deg); }
+}
+
+@keyframes say-hi-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+.say-hi-text,
+.say-hi-arrow {
+  transition: color 300ms ease, transform 300ms ease;
+}
+
+.say-hi-scribble {
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.say-hi-scribble path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 300ms ease;
+}
+
+.say-hi:is(:hover, :focus-visible) .say-hi-scribble {
+  opacity: 1;
+}
+
+.say-hi:is(:hover, :focus-visible) .say-hi-text {
+  color: var(--spot);
+  animation: say-hi-wiggle 600ms ease-in-out;
+  transform: scale(1.12);
+}
+
+.say-hi:is(:hover, :focus-visible) .say-hi-scribble path {
+  stroke-dashoffset: 0;
+  transition-duration: 450ms;
+}
+
+.say-hi:is(:hover, :focus-visible) .say-hi-arrow {
+  color: var(--spot);
+  transform: translate(4px, 3px);
+}
+
+.say-hi:is(:hover, :focus-visible) .say-hi-arrow path:first-child {
+  stroke-dasharray: 1;
+  animation: say-hi-draw 500ms ease-out;
+}
+
+/* Avatar shuffle glitch: the base image jitters and tears while light and dark grey copies slip out of register. */
+@keyframes glitch-base {
+  0% { transform: translate(0); filter: none; }
+  10% { transform: translate(-4px, 1px) skewX(-6deg); filter: grayscale(1) contrast(1.6); }
+  20% { transform: translate(5px, -1px); filter: grayscale(1) brightness(0.7) contrast(1.4); }
+  30% { transform: translate(-2px, 2px); filter: grayscale(1) brightness(1.4); clip-path: inset(0 0 40% 0); }
+  40% { transform: translate(3px, 0) skewX(8deg); filter: grayscale(1) invert(0.15) contrast(1.8); clip-path: inset(30% 0 0 0); }
+  50% { transform: translate(-5px, -2px); filter: grayscale(1) contrast(2); clip-path: none; }
+  60% { transform: translate(2px, 1px); filter: grayscale(1) brightness(1.6) contrast(1.3); }
+  70% { transform: translate(-1px, 0) skewX(-4deg); filter: grayscale(0.6); }
+  85% { transform: translate(1px, -1px); filter: contrast(1.2); }
+  100% { transform: translate(0); filter: none; }
+}
+
+@keyframes glitch-slices {
+  0% { clip-path: inset(8% 0 78% 0); transform: translate(-10px, 0); }
+  12% { clip-path: inset(62% 0 20% 0); transform: translate(12px, 0); }
+  24% { clip-path: inset(30% 0 52% 0); transform: translate(-14px, 0); }
+  36% { clip-path: inset(80% 0 4% 0); transform: translate(8px, 0); }
+  48% { clip-path: inset(44% 0 38% 0); transform: translate(-6px, 0); }
+  60% { clip-path: inset(16% 0 66% 0); transform: translate(14px, 0); }
+  72% { clip-path: inset(70% 0 12% 0); transform: translate(-12px, 0); }
+  84% { clip-path: inset(2% 0 90% 0); transform: translate(6px, 0); }
+  100% { clip-path: inset(50% 0 50% 0); transform: translate(0); }
+}
+
+@keyframes glitch-flicker {
+  0%, 100% { opacity: 0; }
+  15%, 45%, 75% { opacity: 0.55; }
+  30%, 60%, 90% { opacity: 0.1; }
+}
+
+.is-glitching .glitch-base {
+  animation: glitch-base 300ms steps(1, end);
+}
+
+.glitch-light,
+.glitch-dark {
+  mix-blend-mode: screen;
+  animation: glitch-slices 300ms steps(1, end) infinite;
+}
+
+.glitch-light {
+  filter: grayscale(1) brightness(1.8) contrast(1.4);
+}
+
+.glitch-dark {
+  filter: grayscale(1) brightness(0.45) contrast(1.6);
+  mix-blend-mode: normal;
+  animation-delay: -150ms;
+  animation-direction: reverse;
+}
+
+.glitch-scanlines {
+  background: repeating-linear-gradient(to bottom, rgb(255 255 255 / 0.25) 0 1px, transparent 1px 3px);
+  animation: glitch-flicker 300ms steps(1, end);
+}
+
+/* First-load reveal: the curtain's circular hole widens from the centre while the disc grows, then fades. */
+@property --hole {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes loader-hole {
+  0%, 46% { --hole: 0px; }
+  100% { --hole: 150vmax; }
+}
+
+@keyframes loader-disc {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+  12% { transform: translate(-50%, -50%) scale(0.05); opacity: 1; }
+  40% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  46% { transform: translate(-50%, -50%) scale(0.94); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(28); opacity: 0; }
+}
+
+.loader-curtain {
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent var(--hole), #000 calc(var(--hole) + 1px));
+  mask: radial-gradient(circle at 50% 50%, transparent var(--hole), #000 calc(var(--hole) + 1px));
+  animation: loader-hole 1500ms cubic-bezier(0.7, 0, 0.3, 1) forwards;
+}
+
+.loader-disc {
+  animation: loader-disc 1500ms cubic-bezier(0.7, 0, 0.3, 1) forwards;
+}
+
+/* Word-field rows slide sideways forever; each row holds two copies, so -50% lands on an identical frame. */
+@keyframes word-drift {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.word-drift {
+  animation: word-drift 80s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
 }
