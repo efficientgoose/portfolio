@@ -5,6 +5,8 @@ import { SiGithub } from "react-icons/si";
 import { FaLinkedinIn } from "react-icons/fa6";
 import { Container, DotBand, Hr } from "../ui/Layout";
 import GitHubGraph from "./GitHubGraph";
+import ViewCount from "../ui/ViewCount";
+import SongsOnRepeat from "./SongsOnRepeat";
 import RotatingRole from "../ui/RotatingRole";
 import { playGlitchSound, playToggleSound } from "../../lib/sound";
 import { ANCHORA_URL, CAL_LINK, EMAIL, GITHUB_URL, LINKEDIN_URL } from "../../data/links";
@@ -154,8 +156,9 @@ export default function Hero() {
             </div>
 
             <div className="flex flex-col items-end justify-between">
-              {/* Small icon buttons grouped in the top-right corner, as on the reference. */}
+              {/* View count and small icon buttons grouped in the top-right corner, as on the reference. */}
               <div className="flex items-center">
+                <ViewCount />
                 <button
                   type="button"
                   onClick={shuffle}
@@ -230,9 +233,7 @@ export default function Hero() {
       <div className="relative">
         <Container className="pb-8 pt-3 sm:pb-10 sm:pt-4">
           <div className="flex flex-col gap-3 leading-[1.6]">
-            <p>
-              Hey, I'm Ajinkya!
-            </p>
+            <p>Hey, I'm Ajinkya!</p>
             <p>
               I'm a backend engineer at <strong>Fleetx</strong>, building and scaling real-time systems that process{" "}
               <strong>1B+ sensor readings daily from 350K+ vehicles</strong>. My work spans Netty-based TCP servers,
@@ -291,6 +292,8 @@ export default function Hero() {
               ))}
             </div>
           </div>
+
+          <SongsOnRepeat />
 
           <GitHubGraph />
         </Container>

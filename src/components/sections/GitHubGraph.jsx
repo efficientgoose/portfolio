@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { ArrowUpRight } from "lucide-react";
+import { SiGithub } from "react-icons/si";
 import { GITHUB_URL, GITHUB_USER } from "../../data/links";
 
 const API = `https://github-contributions-api.jogruber.de/v4/${GITHUB_USER}?y=last`;
@@ -85,72 +87,103 @@ export default function GitHubGraph() {
   };
 
   return (
-    <div className="flex select-none flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-      <div ref={boxRef} className="relative w-fit text-xs" onMouseLeave={() => setHover(null)}>
-        <div className="mb-1.5 ml-8 flex gap-[4px] text-muted-foreground">
-          {months.map((m, i) => (
-            <span key={i} className="w-[16px] whitespace-nowrap sm:w-[18px]">
-              {m}
-            </span>
-          ))}
-        </div>
-        <div
-          className="flex gap-[4px]"
-          role="img"
-          aria-label={loading ? "Loading GitHub contributions" : `${stats.total} GitHub contributions in the last three months`}
+    <div className="flex flex-col gap-4">
+      {/* Heading row, matching "Songs I have on repeat". */}
+      <div className="flex items-center justify-between gap-4">
+        <p className="flex items-center gap-2">
+          <SiGithub aria-hidden="true" className="size-4 text-foreground" />
+          <span>
+            GitHub <span className="font-medium text-strong">contributions</span>
+          </span>
+        </p>
+        <a
+          href={GITHUB_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-spot"
         >
-          <div className="mr-1 flex w-7 flex-col gap-[4px] text-muted-foreground">
-            {DAY_LABELS.map((d, i) => (
-              <span key={i} className="h-[16px] leading-[16px] sm:h-[18px] sm:leading-[18px]">
-                {d}
+          View profile
+          <ArrowUpRight
+            aria-hidden="true"
+            className="size-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+          />
+        </a>
+      </div>
+
+      <div className="flex select-none flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <div ref={boxRef} className="relative w-fit text-xs" onMouseLeave={() => setHover(null)}>
+          <div className="mb-1.5 ml-8 flex gap-[4px] text-muted-foreground">
+            {months.map((m, i) => (
+              <span key={i} className="w-[16px] whitespace-nowrap sm:w-[18px]">
+                {m}
               </span>
             ))}
           </div>
-          {columns.map((week, w) => (
-            <div key={w} className="flex flex-col gap-[4px]">
-              {week.map((day, d) => (
-                <div
-                  key={day?.date ?? `${w}-${d}`}
-                  onMouseEnter={day ? (e) => showTooltip(day, e.currentTarget) : undefined}
-                  className={`size-[16px] rounded-[3px] sm:size-[18px] ${loading ? "animate-pulse" : ""}`}
-                  style={{
-                    background: day ? `var(--heat-${day.level})` : loading ? "var(--heat-0)" : "transparent",
-                    outline: day && hover?.day === day ? "1px solid var(--muted-foreground)" : "none",
-                    outlineOffset: 1,
-                  }}
-                />
+          <div
+            className="flex gap-[4px]"
+            role="img"
+            aria-label={
+              loading ? "Loading GitHub contributions" : `${stats.total} GitHub contributions in the last three months`
+            }
+          >
+            <div className="mr-1 flex w-7 flex-col gap-[4px] text-muted-foreground">
+              {DAY_LABELS.map((d, i) => (
+                <span key={i} className="h-[16px] leading-[16px] sm:h-[18px] sm:leading-[18px]">
+                  {d}
+                </span>
               ))}
             </div>
-          ))}
-        </div>
-
-        {hover && (
-          <div
-            role="tooltip"
-            className="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-[8px] border border-border bg-muted-bg px-2.5 py-1.5 text-[12.5px] text-foreground shadow-lg"
-            style={{ left: hover.x, top: hover.y - 6 }}
-          >
-            <span className="font-semibold text-title">
-              {hover.day.count === 0 ? "No" : hover.day.count} contribution{hover.day.count === 1 ? "" : "s"}
-            </span>{" "}
-            on {fmt(hover.day.date, { weekday: "short", day: "numeric", month: "short", year: "numeric" })}
+            {columns.map((week, w) => (
+              <div key={w} className="flex flex-col gap-[4px]">
+                {week.map((day, d) => (
+                  <div
+                    key={day?.date ?? `${w}-${d}`}
+                    onMouseEnter={day ? (e) => showTooltip(day, e.currentTarget) : undefined}
+                    className={`size-[16px] rounded-[3px] sm:size-[18px] ${loading ? "animate-pulse" : ""}`}
+                    style={{
+                      background: day ? `var(--heat-${day.level})` : loading ? "var(--heat-0)" : "transparent",
+                      outline: day && hover?.day === day ? "1px solid var(--muted-foreground)" : "none",
+                      outlineOffset: 1,
+                    }}
+                  />
+                ))}
+              </div>
+            ))}
           </div>
-        )}
 
-        <div className="mt-2.5 flex items-center gap-[3px] pl-8 text-muted-foreground" aria-hidden="true">
-          <span className="mr-1">Less</span>
-          {[0, 1, 2, 3, 4].map((level) => (
-            <span key={level} className="size-[11px] rounded-[2px]" style={{ background: `var(--heat-${level})` }} />
-          ))}
-          <span className="ml-1">More</span>
+          {hover && (
+            <div
+              role="tooltip"
+              className="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-[8px] border border-border bg-muted-bg px-2.5 py-1.5 text-[12.5px] text-foreground shadow-lg"
+              style={{ left: hover.x, top: hover.y - 6 }}
+            >
+              <span className="font-semibold text-title">
+                {hover.day.count === 0 ? "No" : hover.day.count} contribution{hover.day.count === 1 ? "" : "s"}
+              </span>{" "}
+              on {fmt(hover.day.date, { weekday: "short", day: "numeric", month: "short", year: "numeric" })}
+            </div>
+          )}
+
+          <div className="mt-2.5 flex items-center gap-[3px] pl-8 text-muted-foreground" aria-hidden="true">
+            <span className="mr-1">Less</span>
+            {[0, 1, 2, 3, 4].map((level) => (
+              <span key={level} className="size-[11px] rounded-[2px]" style={{ background: `var(--heat-${level})` }} />
+            ))}
+            <span className="ml-1">More</span>
+          </div>
         </div>
-      </div>
 
-      <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="grid grid-cols-3 gap-4 sm:grid-cols-1 sm:gap-3">
-        <Stat value={loading ? "—" : stats.total.toLocaleString("en-IN")} label="contributions in 3 months" />
-        <Stat value={loading ? "—" : stats.active} label="active days" />
-        <Stat value={loading ? "—" : `${stats.longest} days`} label="longest streak" />
-      </a>
+        <a
+          href={GITHUB_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="grid grid-cols-3 gap-4 sm:grid-cols-1 sm:gap-3"
+        >
+          <Stat value={loading ? "—" : stats.total.toLocaleString("en-IN")} label="contributions in 3 months" />
+          <Stat value={loading ? "—" : stats.active} label="active days" />
+          <Stat value={loading ? "—" : `${stats.longest} days`} label="longest streak" />
+        </a>
+      </div>
     </div>
   );
 }

@@ -18,6 +18,8 @@ npm run lint      # eslint .
 
 There are no tests. Verify UI changes by looking at them (see **Verifying changes**).
 
+`api/` holds Vercel Functions, which plain `npm run dev` does not serve. `npm run dev` also serves them through a small Vite plugin in `vite.config.js`; `vercel dev` works too (the folder is linked to the `portfolio` Vercel project; env vars are in `.env.local` via `vercel env pull`).
+
 **Gotcha:** the Vite dev server does not reliably pick up changes to `tailwind.config.js`. If new colours or utilities don't appear in the browser but `npm run build` produces them, restart `npm run dev`.
 
 ## Architecture
@@ -67,6 +69,8 @@ Vite + React 19 + Tailwind CSS 3, plain JSX, no router. Deployed on Vercel.
 
 - **Word bands:** rows of dim monospace tech words drift right-to-left (all rows the same direction, slightly different speeds). Words near the cursor turn `--word-spot` yellow in proportion to their distance, hold ~300ms, then ease out over ~1s, leaving a short tapering trail. No blinking, no full stops before words. Phones show 5 rows; larger screens show 9. Tuning constants (`RADIUS`, `HOLD_MS`, `FADE_MS`) are in `WordField.jsx`.
 - **Profile:** framed avatar; the shuffle icon (or clicking the photo) swaps to a different random photo with a ~300ms black-and-white glitch and a short TV-static sound. The subtitle alternates "Backend Engineer" / "Co-Founder, Anchora" with a blur fade.
+- **View count:** an eye icon with the total portfolio views sits left of the shuffle icon (`ViewCount.jsx`). Every page load POSTs to `api/views.js`, which `INCR`s a counter in Upstash Redis (Vercel Marketplace integration `portfolio-views`; env `KV_REST_API_URL`/`KV_REST_API_TOKEN`). Each environment has its own key (`portfolio:views:<VERCEL_ENV>`), so only production traffic counts toward the live number. The displayed total includes a fixed starting offset of 1,200 (`STARTING_VIEWS` in `api/views.js`), added at Ajinkya's request; everything above that is real counted views. The count is hidden if the API is unreachable.
+- **Songs on repeat:** a block under the socials titled "Songs I have on **repeat**" with a "Full playlist" link. `SongsOnRepeat.jsx` shows 4 random songs per visit from Ajinkya's public YouTube Music "My Favourites" playlist (`src/data/music.js`, first 100 tracks; covers are YouTube thumbnails) as a slim tracklist (small cover, title, artist, play button; two columns on desktop, one on phones). Each cover's play button looks up Apple's 30-second preview on demand (iTunes Search API, cached per song) and plays it, one song at a time; no preview opens YouTube Music instead. Only use songs from his playlist. Inline pills and labels in the profile row were tried and rejected.
 - **Icon buttons** (shuffle, theme toggle): muted at rest; on hover a pale gold tint with a gold icon.
 - **Projects:** Anchora is featured and spans the full first row (filled yellow star badge, landing-page screenshot of tryanchora.com); the rest pair up below. Each card is a nested-border frame with the screenshot rising from the bottom; on hover a curved sunburst (wide rays bowing gently outward over faint paper grain) fades in behind it.
 - **Experience:** expandable rows with company logos; the first row starts open.

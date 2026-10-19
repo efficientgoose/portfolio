@@ -282,6 +282,23 @@ body {
   opacity: 0.5;
 }
 
+/* "Now playing" equaliser: three thin bars bouncing out of step. */
+@keyframes eq-bounce {
+  0%, 100% { height: 30%; }
+  50% { height: 100%; }
+}
+
+.now-playing-bars span {
+  width: 2px;
+  height: 30%;
+  border-radius: 1px;
+  background: var(--spot);
+  animation: eq-bounce 900ms ease-in-out infinite;
+}
+
+.now-playing-bars span:nth-child(2) { animation-duration: 700ms; animation-delay: -200ms; }
+.now-playing-bars span:nth-child(3) { animation-duration: 1100ms; animation-delay: -450ms; }
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
