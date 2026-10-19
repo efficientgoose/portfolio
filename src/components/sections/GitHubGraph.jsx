@@ -4,21 +4,23 @@ import { SiGithub } from "react-icons/si";
 import { GITHUB_URL, GITHUB_USER } from "../../data/links";
 
 const API = `https://github-contributions-api.jogruber.de/v4/${GITHUB_USER}?y=last`;
-const WEEKS = 13;
+// History starts on this date; the calendar runs from its week up to today.
+const START_DATE = "2026-07-15";
 const DAY_LABELS = ["", "Mon", "", "Wed", "", "Fri", ""];
+const PLACEHOLDER_WEEKS = 15; // shown while loading
 
 const fmt = (date, opts) => new Date(`${date}T00:00:00Z`).toLocaleDateString("en-GB", { timeZone: "UTC", ...opts });
 
-// The last 13 weeks (about three months), as Sunday-first columns.
-function lastWeeks(days) {
-  if (!days.length) return [];
-  const end = days.length - 1;
-  const lastDow = new Date(`${days[end].date}T00:00:00Z`).getUTCDay();
-  const start = Math.max(0, end - lastDow - (WEEKS - 1) * 7);
-  const slice = days.slice(start, end + 1);
-  while (slice.length % 7) slice.push(null);
+// Days from START_DATE to today as Sunday-first week columns; days before the start date are left blank.
+function weeksSinceStart(days) {
+  const from = days.findIndex((d) => d.date >= START_DATE);
+  if (from === -1) return [];
+  const slice = days.slice(from);
+  const leading = new Date(`${slice[0].date}T00:00:00Z`).getUTCDay();
+  const cells = [...Array(leading).fill(null), ...slice];
+  while (cells.length % 7) cells.push(null);
   const weeks = [];
-  for (let i = 0; i < slice.length; i += 7) weeks.push(slice.slice(i, i + 7));
+  for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
   return weeks;
 }
 
@@ -39,7 +41,7 @@ function summarize(weeks) {
 
 function Stat({ value, label }) {
   return (
-    <div className="flex flex-col sm:items-end">
+    <div className="flex flex-col">
       <span className="text-[1.1rem] font-bold tabular-nums leading-tight text-title">{value}</span>
       <span className="text-xs text-muted-foreground">{label}</span>
     </div>
@@ -61,13 +63,13 @@ export default function GitHubGraph() {
     return () => controller.abort();
   }, []);
 
-  const weeks = useMemo(() => lastWeeks(data?.contributions ?? []), [data]);
+  const weeks = useMemo(() => weeksSinceStart(data?.contributions ?? []), [data]);
   const stats = useMemo(() => summarize(weeks), [weeks]);
 
   if (failed) return null;
 
   const loading = !weeks.length;
-  const columns = loading ? Array.from({ length: WEEKS }, () => Array(7).fill(null)) : weeks;
+  const columns = loading ? Array.from({ length: PLACEHOLDER_WEEKS }, () => Array(7).fill(null)) : weeks;
   const months = columns.map((week, i) => {
     const first = week.find(Boolean);
     const prev = columns[i - 1]?.find(Boolean);
@@ -110,7 +112,8 @@ export default function GitHubGraph() {
         </a>
       </div>
 
-      <div className="flex select-none flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+      {/* Calendar with the stats beside it on desktop (spanning its height, behind a hairline), below it on phones. */}
+      <div className="flex select-none flex-col gap-5 sm:flex-row sm:items-stretch sm:gap-8">
         <div ref={boxRef} className="relative w-fit text-xs" onMouseLeave={() => setHover(null)}>
           <div className="mb-1.5 ml-8 flex gap-[4px] text-muted-foreground">
             {months.map((m, i) => (
@@ -123,7 +126,7 @@ export default function GitHubGraph() {
             className="flex gap-[4px]"
             role="img"
             aria-label={
-              loading ? "Loading GitHub contributions" : `${stats.total} GitHub contributions in the last three months`
+              loading ? "Loading GitHub contributions" : `${stats.total} GitHub contributions since 15 July 2026`
             }
           >
             <div className="mr-1 flex w-7 flex-col gap-[4px] text-muted-foreground">
@@ -177,9 +180,9 @@ export default function GitHubGraph() {
           href={GITHUB_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="grid grid-cols-3 gap-4 sm:grid-cols-1 sm:gap-3"
+          className="grid grid-cols-3 gap-4 border-t border-border pt-4 sm:flex sm:flex-col sm:justify-between sm:border-l sm:border-t-0 sm:py-5 sm:pl-8 sm:pt-5"
         >
-          <Stat value={loading ? "—" : stats.total.toLocaleString("en-IN")} label="contributions in 3 months" />
+          <Stat value={loading ? "—" : stats.total.toLocaleString("en-IN")} label="contributions" />
           <Stat value={loading ? "—" : stats.active} label="active days" />
           <Stat value={loading ? "—" : `${stats.longest} days`} label="longest streak" />
         </a>
