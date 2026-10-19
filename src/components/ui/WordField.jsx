@@ -114,6 +114,10 @@ function Rows({ rows }) {
 const RADIUS = 80; // words within this distance of the cursor light up; the inner part is fully lit
 const HOLD_MS = 300; // a lit word keeps its colour this long after the cursor moves on
 const FADE_MS = 1000; // then eases back to dim; older parts of the path are always dimmer than newer ones
+const TWINKLE_MS = 350; // on phones and touch screens, how often a new batch of words lights up
+const TWINKLE_COUNT = 5; // words per batch
+// Twinkle where there's no cursor to follow: touch devices, and narrow (phone-sized) windows.
+const TWINKLE_QUERY = "(hover: none), (max-width: 640px)";
 
 // A field of dim words drifting sideways, like the background on cloudflare.com/domains.
 // Words near the cursor turn yellow in proportion to how close they are, then fade out,
@@ -125,13 +129,26 @@ export default function WordField({ seed = 7, className = "" }) {
   const frame = useRef(0);
   const pointer = useRef(null);
 
-  useEffect(() => () => cancelAnimationFrame(frame.current), []);
-
   // How lit a word still is right now, after fading since it was last touched.
   const current = (entry, now) =>
     entry ? entry.level * Math.min(1, Math.max(0, 1 - (now - entry.t - HOLD_MS) / FADE_MS)) : 0;
 
-  // Checked once per frame at most, since the words keep moving under the cursor.
+  // Jump a word to `level` brightness, then on the next frame let it hold briefly and ease back to dim,
+  // so the colour drains gradually instead of dropping at the end.
+  const light = (el, level, now) => {
+    heat.current.set(el, { level, t: now });
+    el.style.transition = "none";
+    el.style.color = `color-mix(in srgb, var(--word-spot) ${Math.round(level * 100)}%, var(--muted))`;
+    el.style.opacity = String(0.5 + 0.5 * level);
+    requestAnimationFrame(() => {
+      const fade = `${FADE_MS}ms cubic-bezier(0.25, 0.1, 0.25, 1) ${HOLD_MS}ms`;
+      el.style.transition = `color ${fade}, opacity ${fade}`;
+      el.style.color = "";
+      el.style.opacity = "";
+    });
+  };
+
+  // Desktop: words near the cursor light up. Checked once per frame at most, since the words keep moving.
   const lightNearby = () => {
     frame.current = 0;
     const p = pointer.current;
@@ -143,21 +160,42 @@ export default function WordField({ seed = 7, className = "" }) {
       const distance = Math.hypot(r.left + r.width / 2 - p.x, r.top + r.height / 2 - p.y);
       if (distance > RADIUS) continue;
       const level = Math.min(1, (1 - distance / RADIUS) * 1.8);
-      if (level <= current(heat.current.get(el), now)) continue;
-      heat.current.set(el, { level, t: now });
-      // Jump to the new brightness, then on the next frame let it ease back to dim.
-      el.style.transition = "none";
-      el.style.color = `color-mix(in srgb, var(--word-spot) ${Math.round(level * 100)}%, var(--muted))`;
-      el.style.opacity = String(0.5 + 0.5 * level);
-      requestAnimationFrame(() => {
-        // Hold briefly, then ease out gently, so the colour drains gradually instead of dropping at the end.
-        const fade = `${FADE_MS}ms cubic-bezier(0.25, 0.1, 0.25, 1) ${HOLD_MS}ms`;
-        el.style.transition = `color ${fade}, opacity ${fade}`;
-        el.style.color = "";
-        el.style.opacity = "";
-      });
+      if (level > current(heat.current.get(el), now)) light(el, level, now);
     }
   };
+
+  // Where there's no hover, random visible words twinkle on their own instead.
+  // Re-evaluated when the window crosses the breakpoint, so resizing switches modes.
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const query = window.matchMedia(TWINKLE_QUERY);
+    let timer = 0;
+    const tick = () => {
+      const box = boxRef.current?.getBoundingClientRect();
+      if (!box || box.bottom < 0 || box.top > window.innerHeight) return; // skip while scrolled away
+      const visible = [...boxRef.current.querySelectorAll(".field-word")].filter((el) => {
+        const r = el.getBoundingClientRect();
+        return r.width > 0 && r.right > box.left && r.left < box.right;
+      });
+      const now = performance.now();
+      for (let i = 0; i < TWINKLE_COUNT && visible.length; i++) {
+        const el = visible.splice(Math.floor(Math.random() * visible.length), 1)[0];
+        light(el, 0.6 + Math.random() * 0.4, now);
+      }
+    };
+    const sync = () => {
+      clearInterval(timer);
+      timer = query.matches ? setInterval(tick, TWINKLE_MS) : 0;
+    };
+    sync();
+    query.addEventListener("change", sync);
+    return () => {
+      clearInterval(timer);
+      query.removeEventListener("change", sync);
+    };
+  }, []);
+
+  useEffect(() => () => cancelAnimationFrame(frame.current), []);
 
   const onMove = (e) => {
     pointer.current = { x: e.clientX, y: e.clientY };
