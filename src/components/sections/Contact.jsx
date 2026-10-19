@@ -41,10 +41,10 @@ export default function Contact() {
       <Container className="p-0">
         <div className="bg-striped flex flex-col gap-3 p-4 sm:flex-row sm:items-stretch sm:p-6">
           <CopyEmail />
-          <a href={`mailto:${EMAIL}`} className="group w-full shrink-0 select-none rounded-[10px] border border-border bg-background p-[2px] sm:w-[140px]">
+          <a href={`mailto:${EMAIL}`} className="group w-full shrink-0 select-none rounded-[10px] border border-border bg-background p-[2px] sm:w-[160px]">
             <span className="flex h-full w-full items-center justify-center gap-1.5 rounded-[8px] border border-border bg-[color:var(--accent-tint)] px-4 py-1.5 text-spot transition duration-300 group-hover:bg-[color:var(--accent-tint-hover)] sm:py-0">
               <Mail aria-hidden="true" className="size-4" />
-              <span className="text-[0.95rem] font-medium">Send email</span>
+              <span className="text-[0.95rem] font-medium">Send an email</span>
             </span>
           </a>
         </div>

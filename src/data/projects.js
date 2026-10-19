@@ -8,7 +8,7 @@ export const projects = [
     pinned: true,
     // Hover sunburst in Anchora's golds.
     palette: ["#fbefcf", "#d9aa50", "#f7e2a6", "#b9862c"],
-    description: "A study-abroad planner for students in India, with an AI guide that shows its sources.",
+    description: "A study-abroad planner for students in India, with Atlas, an AI guide that cites its sources.",
   },
   {
     name: "Markiniser",
@@ -18,7 +18,7 @@ export const projects = [
     status: "Live",
     // Hover sunburst in Markiniser's lavender and pink.
     palette: ["#ece8ff", "#a99cf5", "#f3c4ea", "#7d6fe0"],
-    description: "A local-first markdown workspace on localhost, with live preview and ⌘K search.",
+    description: "A Markdown workspace that runs on your machine, with live preview and ⌘K search.",
   },
   {
     name: "Serene",

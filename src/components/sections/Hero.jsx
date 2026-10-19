@@ -239,20 +239,15 @@ export default function Hero() {
       <div className="relative">
         <Container className="pb-8 pt-3 sm:pb-10 sm:pt-4">
           <div className="flex flex-col gap-3 leading-[1.6]">
-            <p>Hey, I'm Ajinkya!</p>
+            <p>Hey, I'm Ajinkya.</p>
             <p>
-              I'm a backend engineer at <strong>Fleetx</strong>, building and scaling real-time systems that process{" "}
-              <strong>1B+ sensor readings daily from 350K+ vehicles</strong>. My work spans Netty-based TCP servers,
-              Kafka pipelines, Spark streaming, and Spring Boot services.
+              I'm a backend engineer at <strong>Fleetx</strong>, where I work on real-time systems processing{" "}
+              <strong>over a billion sensor readings a day from 350,000+ vehicles</strong>. I build the servers,
+              streaming pipelines and services behind vehicle tracking and analytics.
             </p>
             <p>
-              I also co-founded <strong>Anchora</strong>, an AI-powered study-abroad platform that simplifies the
-              journey for students in India. I'm building it end-to-end, from its PostgreSQL architecture and backend
-              systems to its AI assistant.
-            </p>
-            <p>
-              I enjoy solving complex engineering problems, building products from scratch, and turning ideas into
-              things people can use.
+              I'm also the co-founder of <strong>Anchora</strong>, a study-abroad planner for students in India. I'm
+              building the product end to end, from its database and backend to Atlas, its AI guide.
             </p>
           </div>
 
@@ -266,7 +261,7 @@ export default function Hero() {
               className="flex w-fit items-center gap-1.5 overflow-hidden rounded-[9px] bg-strong px-4 py-2.5 text-sm font-medium text-background transition-opacity duration-300 hover:opacity-80"
             >
               <CalendarDays aria-hidden="true" className="size-4" />
-              Grab a Coffee
+              Grab a coffee
             </button>
             <a
               href={`mailto:${EMAIL}`}
@@ -279,7 +274,7 @@ export default function Hero() {
 
           <div className="flex flex-col gap-3 pb-8 pt-8 sm:pb-10 sm:pt-10">
             <p>
-              Here are my <span className="font-medium text-strong">socials</span>
+              Find me <span className="font-medium text-strong">elsewhere</span>
             </p>
             <div className="flex flex-wrap items-center gap-2.5">
               {socials.map(({ label, href, icon: Icon }) => (
