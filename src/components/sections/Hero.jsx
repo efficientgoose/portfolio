@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { getCalApi } from "@calcom/embed-react";
-import { CalendarDays, Globe, Mail, MapPin, Moon, Shuffle, Sun } from "lucide-react";
+import { CalendarDays, Github, Globe, Mail, MapPin, Moon, Shuffle, Sun } from "lucide-react";
 import { SiGithub } from "react-icons/si";
 import { FaLinkedinIn } from "react-icons/fa6";
 import { Container, DotBand, Hr } from "../ui/Layout";
@@ -196,6 +196,16 @@ export default function Hero() {
                 <span className="hidden sm:flex">
                   <ViewCount />
                 </span>
+                <a
+                  href={GITHUB_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub profile"
+                  title="GitHub"
+                  className={iconButton}
+                >
+                  <Github className="size-[18px]" />
+                </a>
                 <button
                   type="button"
                   onClick={shuffle}
