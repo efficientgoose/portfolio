@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) and other coding agents when working with code in this repository. `AGENTS.md` is a symlink to this file, so Codex reads the same guidance.
 
 ## Product context
 
@@ -109,3 +109,14 @@ Headless Chrome screenshots are the check for visual work. Look at the result be
 - Keep changes reversible and uncommitted until asked; when asked to ship, use a feature branch and a PR into `main`.
 - Run `npm run lint` and `npm run build` before declaring a task done.
 - New photos, logos and screenshots go in `public/` (`public/projects/`, `public/logos/`); keep images as WebP where possible.
+
+## End-of-task summary
+
+The owner ships quickly and needs to understand what changed in the code and architecture, not only what is visible. After every task, once the outcome is reported, add a short **How it works** section sized to the task: one line for a copy tweak, the full set for a feature.
+
+- **Files touched:** each changed file and its role.
+- **Mechanism:** how the change works: the data flow, where the logic lives, and the framework or browser feature it relies on.
+- **Why this approach:** the alternatives considered and why they lost, in a line or two.
+- **Watch out for:** trade-offs, fragile parts, and what to change if requirements shift.
+
+Use plain language and explain any jargon. Do this even when the request is only "create PR" or "merged it" and the change has not been explained yet.
