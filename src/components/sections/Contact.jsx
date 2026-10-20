@@ -58,12 +58,12 @@ export default function Contact() {
           </svg>
           <blockquote className="mt-4 max-w-2xl px-1 sm:px-4">
             <p className="text-xl font-bold italic leading-relaxed tracking-tight text-title sm:text-3xl">
-              “Simplicity is the ultimate sophistication.”
+              “Always assume things will work out, then do the work to make it true.”
             </p>
           </blockquote>
           <figcaption className="mt-6 flex items-center gap-3 sm:mt-8">
             <span className="h-px w-8 bg-muted" />
-            <span className="text-xs font-semibold uppercase tracking-widest text-muted sm:text-sm">Leonardo da Vinci</span>
+            <span className="text-xs font-semibold uppercase tracking-widest text-muted sm:text-sm">Sahil Bloom</span>
             <span className="h-px w-8 bg-muted" />
           </figcaption>
         </figure>
