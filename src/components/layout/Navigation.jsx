@@ -39,7 +39,20 @@ export default function Navigation() {
       aria-label="Primary"
       className="sticky top-0 z-50 bg-[color-mix(in_srgb,var(--background)_70%,transparent)] backdrop-blur-md backdrop-saturate-150"
     >
-      <Container className="flex h-12 items-center justify-center py-0">
+      <Container className="flex h-12 items-center justify-center py-0 sm:static">
+        {/* The logo mark, drawn as a CSS mask so it follows the theme's text colour. Hidden on phones;
+            from sm up it's pinned to the page's far left (the Container is made static so the sticky nav
+            is the positioning parent) and the links stay centred. */}
+        <a
+          href="#about"
+          aria-label="Ajinkya Kale, back to top"
+          className="group absolute left-5 top-6 hidden -translate-y-1/2 rounded-[6px] p-1 sm:block"
+        >
+          <span
+            aria-hidden="true"
+            className="block size-[22px] bg-title transition-colors duration-300 [mask:url(/logo-mark.png)_center/contain_no-repeat] group-hover:bg-spot"
+          />
+        </a>
         <div className="flex max-w-full items-center gap-0.5 overflow-x-auto [scrollbar-width:none]">
           {links.map((link) => {
             const isActive = !link.external && active === link.href.slice(1);
