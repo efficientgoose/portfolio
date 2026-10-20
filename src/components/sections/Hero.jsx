@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { getCalApi } from "@calcom/embed-react";
-import { CalendarDays, Github, Globe, Mail, MapPin, Moon, Shuffle, Sun } from "lucide-react";
+import { CalendarDays, Github, Globe, Mail, MapPin, Moon, Sun } from "lucide-react";
 import { SiGithub } from "react-icons/si";
 import { FaLinkedinIn } from "react-icons/fa6";
 import { Container, DotBand, Hr } from "../ui/Layout";
@@ -12,7 +12,7 @@ import RotatingRole from "../ui/RotatingRole";
 import { playGlitchSound } from "../../lib/sound";
 import { ANCHORA_URL, CAL_LINK, EMAIL, GITHUB_URL, LINKEDIN_URL } from "../../data/links";
 
-// The shuffle button (or a click on the avatar) swaps between these.
+// A click on the avatar swaps between these.
 const photos = [
   { src: "/Profile.webp", position: "50% 35%" }, // default
   { src: "/Bottom-Right.webp", position: "50% 26%" },
@@ -206,16 +206,6 @@ export default function Hero() {
                 >
                   <Github className="size-[18px]" />
                 </a>
-                <button
-                  type="button"
-                  onClick={shuffle}
-                  data-own-sound
-                  aria-label="Shuffle photo"
-                  title="Shuffle photo"
-                  className={iconButton}
-                >
-                  <Shuffle className="size-[18px]" />
-                </button>
                 <ThemeToggle />
               </div>
               <div className="hidden select-none items-center gap-1.5 font-medium text-muted sm:flex">
