@@ -34,6 +34,7 @@
   --heat-3: #8f7a45;
   --heat-4: #c4a65a;
   --spot: #d9b562;
+  --bar-l: 66%; /* lightness for the cover-tinted "now playing" bars */
   --word-spot: #f5c542; /* brighter yellow for the word-band trail */
 }
 
@@ -60,6 +61,7 @@
   --heat-3: #c79a26;
   --heat-4: #8a6115;
   --spot: #b7791f;
+  --bar-l: 42%;
   --word-spot: #b7791f;
 }
 
@@ -282,22 +284,26 @@ body {
   opacity: 0.5;
 }
 
-/* "Now playing" equaliser: three thin bars bouncing out of step. */
-@keyframes eq-bounce {
-  0%, 100% { height: 30%; }
-  50% { height: 100%; }
-}
-
-.now-playing-bars span {
+/* "Now playing" bars, Dynamic Island style: thin pills growing from the middle. Heights are set
+   per frame from the song's spectrum (LiveBars). */
+.live-bars span {
   width: 2px;
-  height: 30%;
-  border-radius: 1px;
-  background: var(--spot);
-  animation: eq-bounce 900ms ease-in-out infinite;
+  height: 100%;
+  border-radius: 9999px;
+  background: var(--bar, var(--spot));
+  transform: scaleY(0.2);
+  transition: background-color 300ms ease; /* eases from silver if the cover's colours arrive late */
 }
 
-.now-playing-bars span:nth-child(2) { animation-duration: 700ms; animation-delay: -200ms; }
-.now-playing-bars span:nth-child(3) { animation-duration: 1100ms; animation-delay: -450ms; }
+/* Songs shuffle: each new row blurs and rises in, staggered (delay set inline per row). */
+@keyframes song-in {
+  from { opacity: 0; filter: blur(4px); transform: translateY(6px); }
+  to { opacity: 1; filter: blur(0); transform: none; }
+}
+
+.song-in {
+  animation: song-in 360ms ease-out both;
+}
 
 /* "Grab a coffee": the filled calendar; its header line and day dots take the button's
    colour so they show as cut-outs. */
@@ -334,5 +340,9 @@ body {
   *::after {
     transition-duration: 0ms !important;
     animation-duration: 0ms !important;
+  }
+
+  .song-in {
+    animation: none;
   }
 }
