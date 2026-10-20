@@ -210,7 +210,7 @@ export default function Hero() {
               </div>
               <div className="hidden select-none items-center gap-1.5 font-medium text-muted sm:flex">
                 <MapPin aria-hidden="true" className="size-4" />
-                <span className="text-xs sm:text-sm">Gurgaon, India</span>
+                <span className="text-xs sm:text-sm">New Delhi, India</span>
               </div>
               <span className="flex sm:hidden">
                 <ViewCount />

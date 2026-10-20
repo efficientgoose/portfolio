@@ -22,7 +22,7 @@ export const experiences = [
     role: "Software Developer - Backend",
     type: "Full Time",
     period: "Aug 2025 – Present",
-    location: "Gurgaon, India",
+    location: "New Delhi, India",
     highlights: [
       "Engineering backend systems that ingest 1B+ sensor data points a day from 350K+ vehicles.",
       "Built Netty TCP servers that decode binary packets from vehicle tracking devices.",

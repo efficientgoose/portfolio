@@ -1,0 +1,205 @@
+<!doctype html>
+<!-- Source for public/og.png, the 1200x630 link-preview card. Re-render from the repo root with:
+     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --hide-scrollbars \
+       --allow-file-access-from-files --window-size=1200,630 --virtual-time-budget=5000 \
+       --screenshot="$PWD/public/og.png" "file://$PWD/scripts/og/og.html" -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;700&display=block"
+      rel="stylesheet"
+    />
+    <style>
+      @font-face {
+        font-family: "Geist Mono";
+        src: url("../../public/fonts/GeistMono-Variable.woff2") format("woff2");
+        font-weight: 100 900;
+      }
+
+      :root {
+        --background: #141412;
+        --foreground: #d4d4d4;
+        --border: #313131;
+        --title: #ebebeb;
+        --dot: #5e5e5e;
+        --muted-foreground: #989898;
+        --spot: #d9b562;
+        --word-spot: #f5c542;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: var(--background);
+        color: var(--foreground);
+        font-family: "Figtree", sans-serif;
+        position: relative;
+      }
+
+      /* Full-width dashed rule and railed column, as on the site. */
+      .dash-x {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: repeating-linear-gradient(90deg, var(--border) 0 6px, transparent 6px 14px);
+      }
+
+      .rail {
+        position: absolute;
+        width: 1px;
+        background: repeating-linear-gradient(180deg, var(--border) 0 6px, transparent 6px 14px);
+      }
+
+      .band {
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 176px;
+        padding-top: 18px;
+        overflow: hidden;
+        font-family: "Geist Mono", monospace;
+        font-size: 15px;
+        color: var(--dot);
+        white-space: nowrap;
+      }
+
+      .band div {
+        height: 22px;
+        line-height: 22px;
+      }
+
+      .band span {
+        margin-right: 26px;
+      }
+
+      .band .hot {
+        color: var(--word-spot);
+      }
+
+      .band .warm {
+        color: color-mix(in srgb, var(--word-spot) 35%, var(--dot));
+      }
+
+      .card {
+        position: absolute;
+        top: 177px;
+        left: 255px;
+        width: 690px;
+        height: 453px;
+        padding: 58px 40px 0;
+      }
+
+      .profile {
+        display: flex;
+        align-items: center;
+        gap: 26px;
+      }
+
+      .frame {
+        padding: 6px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+      }
+
+      .frame img {
+        display: block;
+        width: 128px;
+        height: 128px;
+        border-radius: 11px;
+        object-fit: cover;
+        object-position: 50% 35%;
+      }
+
+      h1 {
+        font-size: 56px;
+        font-weight: 700;
+        line-height: 1.05;
+        color: var(--title);
+        letter-spacing: -0.01em;
+      }
+
+      .role {
+        margin-top: 12px;
+        font-size: 22px;
+        white-space: nowrap;
+        color: var(--muted-foreground);
+      }
+
+      .role b {
+        font-weight: 500;
+        color: var(--spot);
+      }
+
+      .line {
+        margin-top: 48px;
+        font-size: 24px;
+        white-space: nowrap;
+        line-height: 1.55;
+      }
+
+      .line strong {
+        color: var(--title);
+        font-weight: 700;
+      }
+
+      .url {
+        position: absolute;
+        left: 40px;
+        bottom: 42px;
+        font-family: "Geist Mono", monospace;
+        font-size: 20px;
+        color: var(--spot);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="band" aria-hidden="true">
+      <div style="margin-left: -40px">
+        <span>postgres</span><span>graphql</span><span>python</span><span>jenkins</span><span>spark</span><span>queues</span><span>rabbitmq</span><span>nextjs</span><span>streaming</span><span>schemas</span><span>backend</span><span>spark</span><span>git</span><span>rest</span><span>docker</span><span>junit</span>
+      </div>
+      <div style="margin-left: -12px">
+        <span>backend</span><span>streaming</span><span>docker</span><span>ajkale</span><span>python</span><span>rest</span><span>gradle</span><span>iot</span><span>scylladb</span><span>producers</span><span class="warm">anchora</span><span>spark</span><span>replicas</span><span>caching</span><span>vercel</span><span>rabbitmq</span>
+      </div>
+      <div style="margin-left: -64px">
+        <span>telemetry</span><span>markiniser</span><span>python</span><span>git</span><span>webhooks</span><span>langchain</span><span>python</span><span>microservices</span><span class="warm">rest</span><span class="hot">consumers</span><span class="warm">cassandra</span><span>microservices</span><span>producers</span><span>cron</span><span>serene</span>
+      </div>
+      <div style="margin-left: -28px">
+        <span>java</span><span>anchora</span><span>elasticsearch</span><span>redis</span><span>ajkale</span><span>langchain</span><span>queues</span><span class="warm">kafka</span><span class="hot">netty</span><span class="hot">fleetx</span><span class="warm">caching</span><span>migrations</span><span>sharding</span><span>atlas</span>
+      </div>
+      <div style="margin-left: -50px">
+        <span>webhooks</span><span>scylladb</span><span>git</span><span>kafka</span><span>streaming</span><span>pipelines</span><span>schemas</span><span>cassandra</span><span class="warm">partitions</span><span>java</span><span>mongodb</span><span>redis</span><span>nextjs</span><span>postgres</span><span>vercel</span>
+      </div>
+      <div style="margin-left: -6px">
+        <span>microservices</span><span>anchora</span><span>spark</span><span>caching</span><span>kubernetes</span><span>pipelines</span><span>spring-boot</span><span>rabbitmq</span><span>python</span><span>atlas</span><span>gradle</span><span>maven</span><span>typescript</span><span>throughput</span>
+      </div>
+      <div style="margin-left: -36px">
+        <span>replicas</span><span>gradle</span><span>mongodb</span><span>webhooks</span><span>python</span><span>spark</span><span>serene</span><span>junit</span><span>fleetx</span><span>supabase</span><span>consumers</span><span>schemas</span><span>jenkins</span><span>kafka</span><span>sharding</span>
+      </div>
+    </div>
+    <div class="dash-x" style="top: 176px"></div>
+    <div class="rail" style="top: 177px; bottom: 0; left: 255px"></div>
+    <div class="rail" style="top: 177px; bottom: 0; left: 945px"></div>
+
+    <main class="card">
+      <div class="profile">
+        <div class="frame"><img src="../../public/Profile.webp" alt="" /></div>
+        <div>
+          <h1>Ajinkya Kale</h1>
+          <p class="role">Backend Engineer · <b>Co-Founder, Anchora</b></p>
+        </div>
+      </div>
+      <p class="line">
+        Real-time systems at <strong>Fleetx</strong>.<br />
+        Building <strong>Anchora</strong>, a study-abroad planner, end to end.
+      </p>
+      <p class="url">ajkale.com</p>
+    </main>
+  </body>
+</html>
