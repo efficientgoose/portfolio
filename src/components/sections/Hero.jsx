@@ -9,8 +9,9 @@ import GitHubGraph from "./GitHubGraph";
 import ViewCount from "../ui/ViewCount";
 import SongsOnRepeat from "./SongsOnRepeat";
 import RotatingRole from "../ui/RotatingRole";
+import LinkPreview from "../ui/LinkPreview";
 import { playGlitchSound } from "../../lib/sound";
-import { ANCHORA_URL, CAL_LINK, EMAIL, GITHUB_URL, LINKEDIN_URL } from "../../data/links";
+import { ANCHORA_URL, ANCHORA_WAITLIST_URL, CAL_LINK, EMAIL, GITHUB_URL, LINKEDIN_URL } from "../../data/links";
 
 // A click on the avatar swaps between these.
 const photos = [
@@ -275,13 +276,35 @@ export default function Hero() {
           <div className="flex flex-col gap-3 leading-[1.6]">
             <p>Hey, I'm Ajinkya.</p>
             <p>
-              I'm a backend engineer at <strong>Fleetx</strong>, where I work on real-time systems processing{" "}
-              <strong>over a billion sensor readings a day from 350,000+ vehicles</strong>. I build the servers,
-              streaming pipelines and services behind vehicle tracking and analytics.
+              I'm the co-founder of{" "}
+              <LinkPreview href={ANCHORA_URL} image="/projects/anchora.webp" label="tryanchora.com">
+                Anchora
+              </LinkPreview>
+              , a study-abroad consultancy in your pocket, where I design and build its core systems, including
+              Atlas, our AI agent. It's in closed beta, with <strong>1,700+ university programs</strong> already
+              indexed and the agent guiding students from shortlisting to visa prep.
+            </p>
+            <p className="-mt-2 mb-3">
+              Want in?{" "}
+              <a
+                href={ANCHORA_WAITLIST_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group whitespace-nowrap font-medium text-strong underline decoration-[color:var(--muted)] decoration-1 underline-offset-[5px] transition-colors duration-200 hover:text-spot hover:decoration-[color:var(--spot)] focus-visible:text-spot focus-visible:decoration-[color:var(--spot)]"
+              >
+                Grab a spot on the waitlist
+                <span
+                  aria-hidden="true"
+                  className="ml-1 inline-block transition-transform duration-200 group-hover:translate-x-0.5 group-focus-visible:translate-x-0.5"
+                >
+                  →
+                </span>
+              </a>
             </p>
             <p>
-              I'm also the co-founder of <strong>Anchora</strong>, a study-abroad planner for students in India. I'm
-              building the product end to end, from its database and backend to Atlas, its AI guide.
+              I'm also a backend engineer at <strong>Fleetx</strong>, where I work on real-time systems processing{" "}
+              <strong>over a billion sensor readings a day from 350,000+ vehicles</strong>. I build the servers,
+              streaming pipelines and services behind vehicle tracking and analytics.
             </p>
           </div>
 
