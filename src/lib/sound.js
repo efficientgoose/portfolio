@@ -1,5 +1,32 @@
 let ctx;
 
+// Site-wide mute, remembered across visits. Every sound here checks it, and the song player
+// subscribes so muting also stops a playing preview.
+let muted = false;
+try {
+  muted = localStorage.getItem("muted") === "1";
+} catch {
+  // Storage can be blocked; start unmuted.
+}
+const listeners = new Set();
+
+export const isMuted = () => muted;
+
+export function setMuted(next) {
+  muted = next;
+  try {
+    localStorage.setItem("muted", next ? "1" : "0");
+  } catch {
+    // The toggle still works for this visit.
+  }
+  listeners.forEach((fn) => fn());
+}
+
+export function subscribeMuted(fn) {
+  listeners.add(fn);
+  return () => listeners.delete(fn);
+}
+
 function audio() {
   ctx ??= new (window.AudioContext || window.webkitAudioContext)();
   if (ctx.state === "suspended") ctx.resume();
@@ -8,6 +35,7 @@ function audio() {
 
 // A short burst of TV static, about as long as the visual glitch.
 export function playGlitchSound() {
+  if (muted) return;
   try {
     const ac = audio();
     const now = ac.currentTime;
@@ -50,6 +78,7 @@ export function playGlitchSound() {
 
 // A soft, short UI click: a tiny burst of band-passed noise with a quick decay.
 export function playClickSound() {
+  if (muted) return;
   try {
     const ac = audio();
     const now = ac.currentTime;
@@ -69,6 +98,44 @@ export function playClickSound() {
 
     source.connect(band).connect(gain).connect(ac.destination);
     source.start(now);
+  } catch {
+    // Audio is a nicety; ignore browsers that block or lack Web Audio.
+  }
+}
+
+// A calm, low chime for a preview card opening: two soft sines a fifth apart, the upper one a
+// touch late, each easing in and ringing out slowly so it settles rather than pings.
+export function playPreviewSound() {
+  if (muted) return;
+  try {
+    const ac = audio();
+    if (ac.state !== "running") return; // hover alone can't unlock audio; stay silent until a click has
+    const now = ac.currentTime;
+
+    const lowpass = ac.createBiquadFilter();
+    lowpass.type = "lowpass";
+    lowpass.frequency.value = 1600;
+    lowpass.connect(ac.destination);
+
+    const notes = [
+      { freq: 392, delay: 0, peak: 0.035, ring: 1.1 }, // G4
+      { freq: 587.33, delay: 0.045, peak: 0.018, ring: 0.9 }, // D5
+    ];
+    for (const { freq, delay, peak, ring } of notes) {
+      const start = now + delay;
+      const osc = ac.createOscillator();
+      osc.type = "sine";
+      osc.frequency.value = freq;
+
+      const env = ac.createGain();
+      env.gain.setValueAtTime(0.0001, start);
+      env.gain.exponentialRampToValueAtTime(peak, start + 0.03);
+      env.gain.exponentialRampToValueAtTime(0.0001, start + ring);
+
+      osc.connect(env).connect(lowpass);
+      osc.start(start);
+      osc.stop(start + ring + 0.05);
+    }
   } catch {
     // Audio is a nicety; ignore browsers that block or lack Web Audio.
   }
