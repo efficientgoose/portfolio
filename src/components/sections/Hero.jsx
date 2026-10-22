@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { flushSync } from "react-dom";
 import { getCalApi } from "@calcom/embed-react";
-import { CalendarDays, Github, Globe, Mail, MapPin, Moon, Sun } from "lucide-react";
+import { CalendarDays, Github, Globe, Mail, MapPin, Moon, Sun, Volume2, VolumeOff } from "lucide-react";
 import { SiGithub } from "react-icons/si";
 import { FaLinkedinIn } from "react-icons/fa6";
 import { Container, DotBand, Hr } from "../ui/Layout";
@@ -10,7 +10,7 @@ import ViewCount from "../ui/ViewCount";
 import SongsOnRepeat from "./SongsOnRepeat";
 import RotatingRole from "../ui/RotatingRole";
 import LinkPreview from "../ui/LinkPreview";
-import { playGlitchSound } from "../../lib/sound";
+import { isMuted, playClickSound, playGlitchSound, setMuted, subscribeMuted } from "../../lib/sound";
 import { ANCHORA_URL, ANCHORA_WAITLIST_URL, CAL_LINK, EMAIL, GITHUB_URL, LINKEDIN_URL } from "../../data/links";
 
 // A click on the avatar swaps between these.
@@ -81,6 +81,31 @@ function ThemeToggle() {
   return (
     <button type="button" onClick={toggle} aria-label="Toggle theme" className={iconButton}>
       {theme === "dark" ? <Sun className="size-[18px]" /> : <Moon className="size-[18px]" />}
+    </button>
+  );
+}
+
+// Mutes every sound on the site and remembers the choice. Unmuting plays the click so you hear it
+// come back; muting stays silent.
+function MuteToggle() {
+  const muted = useSyncExternalStore(subscribeMuted, isMuted);
+
+  const toggle = () => {
+    setMuted(!muted);
+    if (muted) playClickSound();
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      data-own-sound
+      aria-label={muted ? "Turn sounds on" : "Mute sounds"}
+      aria-pressed={muted}
+      title={muted ? "Sounds off" : "Sounds on"}
+      className={iconButton}
+    >
+      {muted ? <VolumeOff className="size-[18px]" /> : <Volume2 className="size-[18px]" />}
     </button>
   );
 }
@@ -207,6 +232,7 @@ export default function Hero() {
                 >
                   <Github className="size-[18px]" />
                 </a>
+                <MuteToggle />
                 <ThemeToggle />
               </div>
               <div className="hidden select-none items-center gap-1.5 font-medium text-muted sm:flex">

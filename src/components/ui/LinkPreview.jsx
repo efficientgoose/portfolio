@@ -1,8 +1,11 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { playPreviewSound } from "../../lib/sound";
 
 const CARD_WIDTH = 248;
 const EDGE = 16; // keep the card this far from the viewport edges
 const NAV_CLEARANCE = 72; // flip below the link when the sticky nav would cover the card
+const REVEAL_DELAY = 80; // matches the card's transition delay in index.css
+const SHOWS_CARD = "(min-width: 640px) and (hover: hover)"; // same breakpoint that un-hides the card
 
 // An inline link that, on hover or keyboard focus, floats a small framed screenshot of the site
 // above it. Phones and touch screens skip the card and just follow the link.
@@ -24,6 +27,14 @@ export default function LinkPreview({ href, image, label, children }) {
       shift: Math.min(Math.max(centre, min), max) - centre,
       below: link.top - height - 10 < NAV_CLEARANCE,
     });
+  }, [open]);
+
+  // Pop as the card appears. Waiting out the reveal delay keeps a passing cursor silent, and
+  // phones, which never show the card, never hear it.
+  useEffect(() => {
+    if (!open || !window.matchMedia(SHOWS_CARD).matches) return;
+    const timer = setTimeout(playPreviewSound, REVEAL_DELAY);
+    return () => clearTimeout(timer);
   }, [open]);
 
   return (

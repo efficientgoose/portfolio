@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, AudioLines, LoaderCircle, Music2, Pause, Play, Shuffle } from "lucide-react";
 import { PLAYLIST_URL, favouriteSongs } from "../../data/music";
+import { isMuted, setMuted, subscribeMuted } from "../../lib/sound";
 
 const SHOWN = 4;
 const VOLUME = 0.6;
@@ -292,6 +293,20 @@ export default function SongsOnRepeat() {
     fadeTo(0, left * 1000);
   };
 
+  // Muting the site fades out a playing preview, like pressing pause.
+  useEffect(
+    () =>
+      subscribeMuted(() => {
+        if (!isMuted()) return;
+        request.current++;
+        setActive(null);
+        stop();
+      }),
+    // `stop` only touches refs, so the first render's copy stays correct.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
   const shuffle = () => {
     request.current++;
     stop();
@@ -306,6 +321,8 @@ export default function SongsOnRepeat() {
   const toggle = async (song) => {
     const audio = audioRef.current;
     if (!audio) return;
+    // Pressing play is an explicit request for sound, so it lifts the site-wide mute.
+    if (isMuted()) setMuted(false);
     // Connect Web Audio on the first click: browsers only let an AudioContext start from a gesture.
     if (graph.current === undefined) graph.current = connectAudio(audio);
     graph.current?.ctx.resume();
