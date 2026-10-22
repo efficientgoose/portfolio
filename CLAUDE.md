@@ -87,7 +87,7 @@ Vite + React 19 + Tailwind CSS 3, plain JSX, no router. Deployed on Vercel.
 
 - Plain, first-person, factual. No "turning coffee into code" jokes, status gimmicks, or self-rated proficiency levels.
 - **Never fabricate numbers, metrics or project details.** Use only what Ajinkya has stated or what the repos/READMEs show. Current figures: Fleetx ingests **1B+** sensor data points a day from **350K+** vehicles; MAQ processed **1M+** documents/month at **99.9%** uptime; Rodic improved accuracy by **80%**.
-- Contact email is `ajinkya@tryanchora.com`.
+- Contact email is `ajinkya@ajkale.com`.
 - Anchora facts must match the Anchora repo (`../Anchora`, especially `PRODUCT.md`): independent students in India applying to Germany; Atlas cites official sources, proposes changes the student accepts, and is off until consent.
 
 ## Verifying changes
