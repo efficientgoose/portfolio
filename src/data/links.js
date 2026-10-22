@@ -1,4 +1,4 @@
-export const EMAIL = "ajinkya@tryanchora.com";
+export const EMAIL = "ajinkya@ajkale.com";
 export const GITHUB_USER = "efficientgoose";
 export const GITHUB_URL = `https://github.com/${GITHUB_USER}`;
 export const LINKEDIN_URL = "https://linkedin.com/in/ajinkode";
