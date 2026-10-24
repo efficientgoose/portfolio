@@ -3,7 +3,7 @@ export const experiences = [
     company: "Anchora",
     href: "https://tryanchora.com",
     logo: "/logos/anchora.svg",
-    role: "Co-founder",
+    role: "Co-Founder, Product & Engineering",
     type: "Founder",
     period: "Jul 2026 – Present",
     location: "India - Remote",
