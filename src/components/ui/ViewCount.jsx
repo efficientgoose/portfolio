@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Eye } from "lucide-react";
 
-const format = new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 });
+const format = new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 2 });
 
 // Total portfolio views, like the page-view count on rinkitadhana.com. Each page load counts one
 // view via /api/views (a Vercel Function backed by Upstash Redis). Hidden if the count can't load,
