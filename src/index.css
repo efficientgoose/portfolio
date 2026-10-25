@@ -36,6 +36,7 @@
   --spot: #d9b562;
   --bar-l: 66%; /* lightness for the cover-tinted "now playing" bars */
   --word-spot: #f5c542; /* brighter yellow for the word-band trail */
+  --loader-disc: #e6e6e6; /* first-load circle: light on dark */
 }
 
 :root[data-theme="light"] {
@@ -63,6 +64,7 @@
   --spot: #b7791f;
   --bar-l: 42%;
   --word-spot: #b7791f;
+  --loader-disc: #1a1a1a;
 }
 
 html {
@@ -238,34 +240,42 @@ body {
   animation: glitch-flicker 300ms steps(1, end);
 }
 
-/* First-load reveal: the curtain's circular hole widens from the centre while the disc grows, then fades. */
-@property --hole {
+/* First-load reveal: a dot grows into a circle, then the circle widens like a lens and fades as it
+   grows. One radius drives both the disc and the curtain's hole, so the page only ever shows inside
+   the circle and its edge keeps moving outward until it leaves the screen. */
+@property --loader-r {
   syntax: "<length>";
-  inherits: false;
+  inherits: true;
   initial-value: 0px;
 }
 
-@keyframes loader-hole {
-  0%, 46% { --hole: 0px; }
-  100% { --hole: 150vmax; }
+@keyframes loader-radius {
+  0% { --loader-r: 0px; }
+  12% { --loader-r: 2.5px; }
+  40% { --loader-r: 50px; }
+  46% { --loader-r: 47px; }
+  100% { --loader-r: 75vmax; }
 }
 
-@keyframes loader-disc {
-  0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-  12% { transform: translate(-50%, -50%) scale(0.05); opacity: 1; }
-  40% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-  46% { transform: translate(-50%, -50%) scale(0.94); opacity: 1; }
-  100% { transform: translate(-50%, -50%) scale(28); opacity: 0; }
+@keyframes loader-disc-fade {
+  0%, 46% { opacity: 1; animation-timing-function: cubic-bezier(0.3, 0, 0.5, 1); }
+  82%, 100% { opacity: 0; }
+}
+
+.loader {
+  animation: loader-radius 1500ms cubic-bezier(0.7, 0, 0.3, 1) forwards;
 }
 
 .loader-curtain {
-  -webkit-mask: radial-gradient(circle at 50% 50%, transparent var(--hole), #000 calc(var(--hole) + 1px));
-  mask: radial-gradient(circle at 50% 50%, transparent var(--hole), #000 calc(var(--hole) + 1px));
-  animation: loader-hole 1500ms cubic-bezier(0.7, 0, 0.3, 1) forwards;
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent var(--loader-r), #000 calc(var(--loader-r) + 1px));
+  mask: radial-gradient(circle at 50% 50%, transparent var(--loader-r), #000 calc(var(--loader-r) + 1px));
 }
 
 .loader-disc {
-  animation: loader-disc 1500ms cubic-bezier(0.7, 0, 0.3, 1) forwards;
+  width: calc(var(--loader-r) * 2);
+  height: calc(var(--loader-r) * 2);
+  background: var(--loader-disc);
+  animation: loader-disc-fade 1500ms linear forwards;
 }
 
 /* Word-field rows slide sideways forever; each row holds two copies, so -50% lands on an identical frame. */
