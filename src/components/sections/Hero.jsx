@@ -138,9 +138,22 @@ export default function Hero() {
   const [photo, setPhoto] = useState(0);
   const [glitching, setGlitching] = useState(false);
   const timers = useRef([]);
+  const preloaded = useRef([]);
+
+  // Fetch and decode the other photos up front so the mid-glitch swap never lands on a blank frame.
+  useEffect(() => {
+    preloaded.current = photos.map(({ src }) => {
+      const img = new Image();
+      img.src = src;
+      img.decode?.().catch(() => {});
+      return img;
+    });
+  }, []);
 
   // Glitch for ~300ms in sound and picture, swapping to a different random photo partway through.
+  // Clicks during a glitch are ignored: the CSS animation can't restart mid-run, so a second swap would jump unanimated.
   const shuffle = () => {
+    if (glitching) return;
     playGlitchSound();
     timers.current.forEach(clearTimeout);
     setGlitching(true);
