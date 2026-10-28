@@ -91,7 +91,7 @@ Vite + React 19 + Tailwind CSS 3, TypeScript (strict), no router. Deployed on Ve
 ## Copy and content rules
 
 - Plain, first-person, factual. No "turning coffee into code" jokes, status gimmicks, or self-rated proficiency levels.
-- **Never fabricate numbers, metrics or project details.** Use only what Ajinkya has stated or what the repos/READMEs show. Current figures: Fleetx ingests **1B+** sensor data points a day from **350K+** vehicles; MAQ processed **1M+** documents/month at **99.9%** uptime; Rodic improved accuracy by **80%**.
+- **Never fabricate numbers, metrics or project details.** Use only what Ajinkya has stated or what the repos/READMEs show. Current figures: Fleetx ingests **1B+** sensor data points a day from **350K+** vehicles; MAQ processed **1M+** documents/month at **99.9%** uptime; Rodic improved accuracy by **80%**. Anchora has **1,700+** university programs indexed and **1,000+** people on the waitlist.
 - Contact email is `ajinkya@ajkale.com`.
 - Anchora facts must match the Anchora repo (`../Anchora`, especially `PRODUCT.md`): independent students in India applying to Germany; Atlas cites official sources, proposes changes the student accepts, and is off until consent.
 
