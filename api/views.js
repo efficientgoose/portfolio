@@ -1,7 +1,8 @@
 import { Redis } from "@upstash/redis";
 
 // Vercel Function: the portfolio's total page views, stored in Upstash Redis (provisioned via the
-// Vercel Marketplace, which sets KV_REST_API_URL and KV_REST_API_TOKEN).
+// Vercel Marketplace; KV_REST_API_URL and KV_REST_API_TOKEN are set by hand as Sensitive vars, and
+// only Production gets a token that can write).
 //   POST /api/views  → counts one view and returns { views }
 //   GET  /api/views  → returns { views } without counting
 // Every environment shows the production count, so the number is the same everywhere, but only
