@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { ArrowUpRight, AudioLines, LoaderCircle, Music2, Pause, Play, Shuffle } from "lucide-react";
-import { PLAYLIST_URL, favouriteSongs } from "../../data/music";
+import { PLAYLIST_URL, favouriteSongs, type Song } from "../../data/music";
 import { isMuted, setMuted, subscribeMuted } from "../../lib/sound";
 
 const SHOWN = 4;
@@ -10,12 +10,12 @@ const FADE_OUT_MS = 450;
 const END_FADE_S = 2; // The last seconds of a preview fade out instead of cutting off.
 
 // Apple's official 30-second preview for a song, looked up on first play and cached.
-const previews = new Map();
-async function findPreview({ id, title, artist }) {
-  if (previews.has(id)) return previews.get(id);
+const previews = new Map<string, string | null>();
+async function findPreview({ id, title, artist }: Song): Promise<string | null> {
+  if (previews.has(id)) return previews.get(id) ?? null;
   const term = `${title.replace(/\s*\(.*?\)/g, "")} ${artist}`;
   const url = `https://itunes.apple.com/search?${new URLSearchParams({ term, entity: "song", limit: "5" })}`;
-  const { results = [] } = await (await fetch(url)).json();
+  const { results = [] }: { results?: { previewUrl?: string }[] } = await (await fetch(url)).json();
   const found = results.find((r) => r.previewUrl)?.previewUrl ?? null;
   previews.set(id, found);
   return found;
@@ -28,11 +28,14 @@ async function findPreview({ id, title, artist }) {
 // eighth of the top slice's weight. Lightness comes from the theme (--bar-l), so the colours stay
 // readable in both. Black-and-white or unreadable covers return null (shown in silver). Cached per
 // song.
-const coverColors = new Map();
-function findCoverColors({ id, cover }) {
-  if (coverColors.has(id)) return Promise.resolve(coverColors.get(id));
+type Hue = { h: number; s: number };
+type CoverColors = Hue[] | null;
+
+const coverColors = new Map<string, CoverColors>();
+function findCoverColors({ id, cover }: Song): Promise<CoverColors> {
+  if (coverColors.has(id)) return Promise.resolve(coverColors.get(id) ?? null);
   return new Promise((resolve) => {
-    const done = (color) => {
+    const done = (color: CoverColors) => {
       coverColors.set(id, color);
       resolve(color);
     };
@@ -44,7 +47,7 @@ function findCoverColors({ id, cover }) {
         const size = 24;
         const canvas = document.createElement("canvas");
         canvas.width = canvas.height = size;
-        const ctx = canvas.getContext("2d", { willReadFrequently: true });
+        const ctx = canvas.getContext("2d", { willReadFrequently: true })!;
         const side = Math.min(img.width, img.height);
         ctx.drawImage(img, (img.width - side) / 2, (img.height - side) / 2, side, side, 0, 0, size, size);
         const { data } = ctx.getImageData(0, 0, size, size);
@@ -71,7 +74,7 @@ function findCoverColors({ id, cover }) {
         // A cover counts as black and white only if under 1% of it has colour; a small accent (the
         // purple title on an otherwise monochrome cover) still sets the colour.
         if (colourful < size * size * 0.01) return done(null);
-        const hueGap = (a, b) => Math.min(Math.abs(a - b), 360 - Math.abs(a - b));
+        const hueGap = (a: number, b: number) => Math.min(Math.abs(a - b), 360 - Math.abs(a - b));
         const picked = [ranked[0]];
         for (const c of ranked.slice(1)) {
           if (picked.length === 3 || c.weight < ranked[0].weight * 0.12) break;
@@ -86,7 +89,7 @@ function findCoverColors({ id, cover }) {
   });
 }
 
-function rgbToHsl(r, g, b) {
+function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
   r /= 255;
   g /= 255;
   b /= 255;
@@ -119,7 +122,9 @@ const RELEASE = [0.1, 0.14, 0.08, 0.12, 0.16, 0.11];
 // Route the <audio> through Web Audio once, so the bars can read its spectrum and the fades can use
 // a gain node (iOS ignores audio.volume). Needs a user gesture and CORS on the preview, which Apple
 // allows. Returns null where Web Audio is missing; playback then works as before, with a still icon.
-function connectAudio(audio) {
+type AudioGraph = { ctx: AudioContext; gain: GainNode; analyser: AnalyserNode };
+
+function connectAudio(audio: HTMLAudioElement): AudioGraph | null {
   const Ctx = window.AudioContext || window.webkitAudioContext;
   if (!Ctx) return null;
   try {
@@ -141,7 +146,7 @@ function connectAudio(audio) {
 // lighter to a deeper shade of it, and a black-and-white one sweeps through silver (the text colour
 // down to the muted one), so every playing song gets a gradient taken from its art. Shared by the
 // bars, the playing song's title and its pause icon so they match.
-function coverStops(colors) {
+function coverStops(colors: CoverColors | undefined): string[] {
   if (!colors) return ["var(--foreground)", "var(--muted-foreground)"];
   if (colors.length === 1) {
     const { h, s } = colors[0];
@@ -152,7 +157,7 @@ function coverStops(colors) {
 
 // The playing title in the cover's colours: a left-to-right gradient clipped to the text when there
 // are several, else a plain colour.
-function titlePaint(colors) {
+function titlePaint(colors: CoverColors | undefined): CSSProperties {
   const stops = coverStops(colors);
   if (stops.length === 1) return { color: stops[0] };
   return {
@@ -166,8 +171,8 @@ function titlePaint(colors) {
 // Six pill bars in the style of the Dynamic Island's now-playing waveform, each following the
 // loudness of one frequency band as the song plays. They jump up quickly on a beat and ease back
 // down. Heights are written straight to the DOM each frame, skipping React renders.
-function LiveBars({ analyser, colors }) {
-  const bars = useRef([]);
+function LiveBars({ analyser, colors }: { analyser?: AnalyserNode; colors?: CoverColors }) {
+  const bars = useRef<(HTMLSpanElement | null)[]>([]);
   const reduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   useEffect(() => {
@@ -180,7 +185,7 @@ function LiveBars({ analyser, colors }) {
     const shown = BANDS.map(() => MIN_BAR);
     // A slow, random sway per bar, scaled by the music's level, so neighbours never sit at one height.
     const sway = BANDS.map(() => ({ now: 1, to: 1, next: 0 }));
-    let frame;
+    let frame = 0;
     const draw = () => {
       analyser.getByteFrequencyData(data);
       const time = performance.now();
@@ -209,7 +214,7 @@ function LiveBars({ analyser, colors }) {
   }, [analyser, reduced]);
 
   const stops = coverStops(colors);
-  const barColor = (i) => {
+  const barColor = (i: number) => {
     if (stops.length === 1) return stops[0];
     const at = (i / (BANDS.length - 1)) * (stops.length - 1);
     const from = Math.min(Math.floor(at), stops.length - 2);
@@ -222,13 +227,15 @@ function LiveBars({ analyser, colors }) {
   return (
     <span aria-hidden="true" className="live-bars flex h-5 shrink-0 items-center gap-[2px]">
       {BANDS.map((_, i) => (
-        <span key={i} ref={(el) => (bars.current[i] = el)} style={{ "--bar": barColor(i) }} />
+        <span key={i} ref={(el) => {
+            bars.current[i] = el;
+          }} style={{ "--bar": barColor(i) }} />
       ))}
     </span>
   );
 }
 
-function pickRandom(list, count) {
+function pickRandom<T>(list: T[], count: number): T[] {
   const copy = [...list];
   for (let i = copy.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -242,26 +249,26 @@ function pickRandom(list, count) {
 // The shuffle button swaps in four songs not currently shown.
 export default function SongsOnRepeat() {
   const [songs, setSongs] = useState(() => pickRandom(favouriteSongs, SHOWN));
-  const [active, setActive] = useState(null); // { id, status: "loading" | "playing", colors }
+  const [active, setActive] = useState<{ id: string; status: "loading" | "playing"; colors?: CoverColors } | null>(null);
   const [round, setRound] = useState(0); // Counts shuffles; a new key remounts the list so its rows animate in.
-  const audioRef = useRef(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const request = useRef(0); // Bumped on every play or shuffle so a stale preview lookup can't start playing.
   const fade = useRef({ timer: 0, ending: false });
-  const graph = useRef(undefined); // Web Audio nodes once connected; null if unavailable.
+  const graph = useRef<AudioGraph | null | undefined>(undefined); // Web Audio nodes once connected; null if unavailable.
 
   // Playback level: the gain node when Web Audio is connected, else the element's own volume.
-  const getLevel = () => (graph.current ? graph.current.gain.gain.value : audioRef.current.volume);
-  const setLevel = (v) => {
+  const getLevel = () => (graph.current ? graph.current.gain.gain.value : audioRef.current!.volume);
+  const setLevel = (v: number) => {
     if (graph.current) graph.current.gain.gain.value = v;
-    else audioRef.current.volume = v;
+    else audioRef.current!.volume = v;
   };
 
   // Ramp the volume to `target` over `ms`. A new fade cancels the one in progress, whose promise then
   // never settles, so whatever was waiting on it (a pause) is dropped. Steps on a timer rather than
   // animation frames, which stop in background tabs.
-  const fadeTo = (target, ms) => {
+  const fadeTo = (target: number, ms: number) => {
     clearTimeout(fade.current.timer);
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       const from = getLevel();
       const start = performance.now();
       const step = () => {
@@ -286,7 +293,7 @@ export default function SongsOnRepeat() {
 
   // Start the end-of-preview fade once, as playback enters its last seconds.
   const onTimeUpdate = () => {
-    const audio = audioRef.current;
+    const audio = audioRef.current!;
     const left = audio.duration - audio.currentTime;
     if (audio.paused || fade.current.ending || !(left < END_FADE_S)) return;
     fade.current.ending = true;
@@ -318,7 +325,7 @@ export default function SongsOnRepeat() {
     });
   };
 
-  const toggle = async (song) => {
+  const toggle = async (song: Song) => {
     const audio = audioRef.current;
     if (!audio) return;
     // Pressing play is an explicit request for sound, so it lifts the site-wide mute.
@@ -430,13 +437,13 @@ export default function SongsOnRepeat() {
                   className={`block w-fit max-w-full truncate text-sm font-medium transition-colors ${
                     state === "playing" ? "" : "text-title group-hover:text-spot"
                   }`}
-                  style={state === "playing" ? titlePaint(active.colors) : undefined}
+                  style={state === "playing" ? titlePaint(active?.colors) : undefined}
                 >
                   {song.title}
                 </span>
                 <span className="block truncate text-xs text-muted-foreground">{song.artist}</span>
               </div>
-              {state === "playing" && <LiveBars analyser={graph.current?.analyser} colors={active.colors} />}
+              {state === "playing" && <LiveBars analyser={graph.current?.analyser} colors={active?.colors} />}
               <button
                 type="button"
                 onClick={(e) => {
@@ -450,7 +457,7 @@ export default function SongsOnRepeat() {
               >
                 {/* The last colour of the bars' gradient, so the sweep carries on into the button. */}
                 {state === "playing" && (
-                  <Pause className="size-3.5" fill="currentColor" style={{ color: coverStops(active.colors).at(-1) }} />
+                  <Pause className="size-3.5" fill="currentColor" style={{ color: coverStops(active?.colors).at(-1) }} />
                 )}
                 {state === "loading" && <LoaderCircle className="size-3.5 animate-spin" />}
                 {state === "idle" && <Play className="ml-0.5 size-3.5" fill="currentColor" />}

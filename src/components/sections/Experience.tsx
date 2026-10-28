@@ -2,10 +2,10 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { Container, Hr, SectionHeader, ViewAll } from "../ui/Layout";
 import { cn } from "../../lib/cn";
-import { experiences } from "../../data/timeline";
+import { experiences, type Experience as Job } from "../../data/timeline";
 import { LINKEDIN_URL } from "../../data/links";
 
-function ExperienceRow({ job, defaultOpen }) {
+function ExperienceRow({ job, defaultOpen }: { job: Job; defaultOpen: boolean }) {
   const [open, setOpen] = useState(defaultOpen);
   const panelId = `exp-${job.company.replace(/\W+/g, "-").toLowerCase()}`;
 

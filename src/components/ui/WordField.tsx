@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, type MouseEvent } from "react";
 
 // Vocabulary from the work: the stack, the systems and the products.
 const WORDS = [
@@ -67,7 +67,9 @@ const MOBILE_ROWS = 5;
 const PER_ROW = 28; // enough that one copy spans even very wide screens, so the loop never shows a gap
 
 // Small seeded shuffle so each band gets its own stable arrangement.
-function seeded(seed) {
+type Row = { duration: number; words: string[] };
+
+function seeded(seed: number) {
   let s = seed;
   return () => {
     s = (s * 9301 + 49297) % 233280;
@@ -75,7 +77,7 @@ function seeded(seed) {
   };
 }
 
-function useRows(seed) {
+function useRows(seed: number): Row[] {
   return useMemo(() => {
     const rand = seeded(seed);
     return Array.from({ length: ROWS }, () => ({
@@ -88,7 +90,7 @@ function useRows(seed) {
 
 // Rows sit at natural line spacing rather than being stretched to a fixed height,
 // so they never crush together; phones show fewer rows in slightly smaller type.
-function Rows({ rows }) {
+function Rows({ rows }: { rows: Row[] }) {
   return (
     <div className="flex flex-col gap-[10px] py-2 font-mono text-[11px] leading-none sm:gap-3 sm:text-[12px]">
       {rows.map((row, r) => (
@@ -126,21 +128,23 @@ const TWINKLE_QUERY = "(hover: none), (max-width: 640px)";
 // A field of dim words drifting sideways, like the background on cloudflare.com/domains.
 // Words near the cursor turn yellow in proportion to how close they are, then fade out,
 // leaving a short trail that tapers off behind the cursor.
-export default function WordField({ seed = 7, className = "" }) {
+type Heat = { level: number; t: number };
+
+export default function WordField({ seed = 7, className = "" }: { seed?: number; className?: string }) {
   const rows = useRows(seed);
-  const boxRef = useRef(null);
-  const heat = useRef(new Map()); // word element -> { level, t } at the moment it was last lit
+  const boxRef = useRef<HTMLDivElement>(null);
+  const heat = useRef(new Map<HTMLElement, Heat>()); // word element -> { level, t } at the moment it was last lit
   const frame = useRef(0);
-  const pointer = useRef(null);
-  const pending = useRef(new Set()); // twinkle timeouts, cleared on unmount
+  const pointer = useRef<{ x: number; y: number } | null>(null);
+  const pending = useRef(new Set<ReturnType<typeof setTimeout>>()); // twinkle timeouts, cleared on unmount
 
   // How lit a word still is right now, after fading since it was last touched.
-  const current = (entry, now) =>
+  const current = (entry: Heat | undefined, now: number) =>
     entry ? entry.level * Math.min(1, Math.max(0, 1 - (now - entry.t - HOLD_MS) / FADE_MS)) : 0;
 
   // Jump a word to `level` brightness, then on the next frame let it hold briefly and ease back to dim,
   // so the colour drains gradually instead of dropping at the end.
-  const light = (el, level, now) => {
+  const light = (el: HTMLElement, level: number, now: number) => {
     heat.current.set(el, { level, t: now });
     el.style.transition = "none";
     el.style.color = `color-mix(in srgb, var(--word-spot) ${Math.round(level * 100)}%, var(--muted))`;
@@ -159,7 +163,7 @@ export default function WordField({ seed = 7, className = "" }) {
     const p = pointer.current;
     if (!p) return;
     const now = performance.now();
-    for (const el of boxRef.current.querySelectorAll(".field-word")) {
+    for (const el of boxRef.current!.querySelectorAll<HTMLElement>(".field-word")) {
       const r = el.getBoundingClientRect();
       if (r.width === 0) continue;
       const distance = Math.hypot(r.left + r.width / 2 - p.x, r.top + r.height / 2 - p.y);
@@ -170,7 +174,7 @@ export default function WordField({ seed = 7, className = "" }) {
   };
 
   // A slow star-like glow: ease up to `level`, hold, then fade out gently. Unlike `light`, there's no instant jump.
-  const twinkle = (el, level) => {
+  const twinkle = (el: HTMLElement, level: number) => {
     if (el.dataset.twinkling) return;
     el.dataset.twinkling = "1";
     const ease = "cubic-bezier(0.45, 0, 0.55, 1)";
@@ -196,7 +200,7 @@ export default function WordField({ seed = 7, className = "" }) {
     const tick = () => {
       const box = boxRef.current?.getBoundingClientRect();
       if (!box || box.bottom < 0 || box.top > window.innerHeight) return; // skip while scrolled away
-      const visible = [...boxRef.current.querySelectorAll(".field-word")].filter((el) => {
+      const visible = [...boxRef.current!.querySelectorAll<HTMLElement>(".field-word")].filter((el) => {
         const r = el.getBoundingClientRect();
         return r.width > 0 && r.right > box.left && r.left < box.right;
       });
@@ -225,7 +229,7 @@ export default function WordField({ seed = 7, className = "" }) {
     };
   }, []);
 
-  const onMove = (e) => {
+  const onMove = (e: MouseEvent) => {
     pointer.current = { x: e.clientX, y: e.clientY };
     if (!frame.current) frame.current = requestAnimationFrame(lightNearby);
   };

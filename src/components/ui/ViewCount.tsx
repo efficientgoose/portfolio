@@ -7,7 +7,7 @@ const format = new Intl.NumberFormat("en", { notation: "compact", maximumFractio
 // view via /api/views (a Vercel Function backed by Upstash Redis). Hidden if the count can't load,
 // e.g. under plain `vite dev`, which doesn't serve /api.
 export default function ViewCount() {
-  const [views, setViews] = useState(null);
+  const [views, setViews] = useState<number | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();

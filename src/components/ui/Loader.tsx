@@ -10,7 +10,7 @@ const MAX_STEP_MS = 34;
 // opens like a lens and fades as it grows until the page underneath fills the screen.
 export default function Loader() {
   const [done, setDone] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (done) return;
@@ -19,13 +19,13 @@ export default function Loader() {
 
     // The CSS keyframes define the look; this loop drives their clock one painted frame at a time.
     const animations = ref.current?.getAnimations?.({ subtree: true }) ?? [];
-    let frame;
-    let timer;
+    let frame = 0;
+    let timer: ReturnType<typeof setTimeout> | undefined;
     if (animations.length) {
       animations.forEach((a) => a.pause());
       let elapsed = 0;
-      let last = null;
-      const tick = (now) => {
+      let last: number | null = null;
+      const tick = (now: number) => {
         if (last !== null) elapsed = Math.min(TOTAL_MS, elapsed + Math.min(now - last, MAX_STEP_MS));
         last = now;
         animations.forEach((a) => (a.currentTime = elapsed));

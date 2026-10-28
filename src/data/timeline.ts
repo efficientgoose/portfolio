@@ -1,4 +1,16 @@
-export const experiences = [
+export type Experience = {
+  company: string;
+  href?: string;
+  logo: string;
+  role: string;
+  type: string;
+  period: string;
+  location?: string;
+  highlights: string[];
+  stack: string[];
+};
+
+export const experiences: Experience[] = [
   {
     company: "Anchora",
     href: "https://tryanchora.com",

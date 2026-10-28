@@ -31,7 +31,7 @@ const iconButton =
   "relative z-10 w-fit cursor-pointer rounded-[6px] border border-transparent p-1.5 text-muted transition-colors duration-300 hover:border-border hover:bg-[color:var(--accent-tint)] hover:text-spot";
 
 // Lucide's Mail, filled: the body is solid and the flap is cut out in the hovered button's colour.
-function MailFilled({ className }) {
+function MailFilled({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -137,8 +137,8 @@ export default function Hero() {
   useCalPopup();
   const [photo, setPhoto] = useState(0);
   const [glitching, setGlitching] = useState(false);
-  const timers = useRef([]);
-  const preloaded = useRef([]);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const preloaded = useRef<HTMLImageElement[]>([]);
 
   // Fetch and decode the other photos up front so the mid-glitch swap never lands on a blank frame.
   useEffect(() => {

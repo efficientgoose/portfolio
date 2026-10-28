@@ -9,23 +9,26 @@ const START_DATE = "2026-07-15";
 const DAY_LABELS = ["", "Mon", "", "Wed", "", "Fri", ""];
 const PLACEHOLDER_WEEKS = 15; // shown while loading
 
-const fmt = (date, opts) => new Date(`${date}T00:00:00Z`).toLocaleDateString("en-GB", { timeZone: "UTC", ...opts });
+type Day = { date: string; count: number; level: number };
+type Week = Array<Day | null>;
+
+const fmt = (date: string, opts: Intl.DateTimeFormatOptions) => new Date(`${date}T00:00:00Z`).toLocaleDateString("en-GB", { timeZone: "UTC", ...opts });
 
 // Days from START_DATE to today as Sunday-first week columns; days before the start date are left blank.
-function weeksSinceStart(days) {
+function weeksSinceStart(days: Day[]): Week[] {
   const from = days.findIndex((d) => d.date >= START_DATE);
   if (from === -1) return [];
   const slice = days.slice(from);
   const leading = new Date(`${slice[0].date}T00:00:00Z`).getUTCDay();
-  const cells = [...Array(leading).fill(null), ...slice];
+  const cells: Week = [...Array<null>(leading).fill(null), ...slice];
   while (cells.length % 7) cells.push(null);
-  const weeks = [];
+  const weeks: Week[] = [];
   for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
   return weeks;
 }
 
-function summarize(weeks) {
-  const days = weeks.flat().filter(Boolean);
+function summarize(weeks: Week[]) {
+  const days = weeks.flat().filter((d): d is Day => d !== null);
   let streak = 0;
   let longest = 0;
   for (const d of days) {
@@ -39,7 +42,7 @@ function summarize(weeks) {
   };
 }
 
-function Stat({ value, label }) {
+function Stat({ value, label }: { value: string | number; label: string }) {
   return (
     <div className="flex flex-col">
       <span className="text-[1.1rem] font-bold tabular-nums leading-tight text-title">{value}</span>
@@ -49,10 +52,10 @@ function Stat({ value, label }) {
 }
 
 export default function GitHubGraph() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<{ contributions: Day[] } | null>(null);
   const [failed, setFailed] = useState(false);
-  const [hover, setHover] = useState(null);
-  const boxRef = useRef(null);
+  const [hover, setHover] = useState<{ day: Day; x: number; y: number } | null>(null);
+  const boxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -69,7 +72,7 @@ export default function GitHubGraph() {
   if (failed) return null;
 
   const loading = !weeks.length;
-  const columns = loading ? Array.from({ length: PLACEHOLDER_WEEKS }, () => Array(7).fill(null)) : weeks;
+  const columns = loading ? Array.from({ length: PLACEHOLDER_WEEKS }, (): Week => Array<null>(7).fill(null)) : weeks;
   const months = columns.map((week, i) => {
     const first = week.find(Boolean);
     const prev = columns[i - 1]?.find(Boolean);
@@ -82,9 +85,9 @@ export default function GitHubGraph() {
     if (m && months.slice(i + 1, i + 3).some(Boolean)) months[i] = "";
   });
 
-  const showTooltip = (day, el) => {
+  const showTooltip = (day: Day, el: Element) => {
     const cell = el.getBoundingClientRect();
-    const box = boxRef.current.getBoundingClientRect();
+    const box = boxRef.current!.getBoundingClientRect();
     setHover({ day, x: cell.left - box.left + cell.width / 2, y: cell.top - box.top });
   };
 

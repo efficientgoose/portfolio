@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Star } from "lucide-react";
 import { Container, Hr, SectionHeader, ViewAll } from "../ui/Layout";
-import { projects } from "../../data/projects";
+import { projects, type Project } from "../../data/projects";
 import { GITHUB_URL } from "../../data/links";
 
 // Hover backdrop, modelled on rinkitadhana.com: a few wide rays fanning out from below the screenshot,
@@ -13,13 +13,13 @@ const ORIGIN = { x: 200, y: 290 }; // below the card, behind the screenshot
 const REACH = 520;
 const BEND = 0.22; // how far each edge bows outward; 0 is straight
 
-const point = (r, deg) => {
+const point = (r: number, deg: number) => {
   const rad = (deg * Math.PI) / 180;
   return `${(ORIGIN.x + r * Math.cos(rad)).toFixed(1)} ${(ORIGIN.y + r * Math.sin(rad)).toFixed(1)}`;
 };
 
 // The control point leans toward straight up (270deg), so each edge rises steeply, then eases outward.
-const edge = (deg) => ({ control: point(REACH * 0.5, deg - (deg - 270) * BEND), end: point(REACH, deg) });
+const edge = (deg: number) => ({ control: point(REACH * 0.5, deg - (deg - 270) * BEND), end: point(REACH, deg) });
 
 const RAYS = Array.from({ length: RAY_COUNT }, (_, i) => {
   const step = RAY_SPAN / RAY_COUNT;
@@ -29,7 +29,7 @@ const RAYS = Array.from({ length: RAY_COUNT }, (_, i) => {
   return `M${o} Q${a.control} ${a.end} L${b.end} Q${b.control} ${o}Z`;
 });
 
-function Sunburst({ palette }) {
+function Sunburst({ palette }: { palette: string[] }) {
   return (
     <svg
       aria-hidden="true"
@@ -50,7 +50,7 @@ function Sunburst({ palette }) {
   );
 }
 
-function StatusDot({ status }) {
+function StatusDot({ status }: { status: Project["status"] }) {
   const live = status === "Live";
   return (
     <div className="flex select-none items-center gap-1">
@@ -67,13 +67,13 @@ function StatusDot({ status }) {
   );
 }
 
-function ProjectCard({ project, wide }) {
-  const cardRef = useRef(null);
+function ProjectCard({ project, wide }: { project: Project; wide?: boolean }) {
+  const cardRef = useRef<HTMLAnchorElement>(null);
   const [inView, setInView] = useState(false);
 
   useEffect(() => {
     const touch = window.matchMedia("(hover: none)");
-    let observer;
+    let observer: IntersectionObserver | undefined;
 
     const sync = () => {
       observer?.disconnect();
@@ -84,7 +84,7 @@ function ProjectCard({ project, wide }) {
         ([entry]) => setInView(entry.isIntersecting && entry.intersectionRatio >= 0.45),
         { threshold: [0, 0.45] },
       );
-      observer.observe(cardRef.current);
+      observer.observe(cardRef.current!);
     };
 
     sync();

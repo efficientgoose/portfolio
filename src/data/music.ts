@@ -114,3 +114,5 @@ export const favouriteSongs = [
   cover: `https://i.ytimg.com/vi/${song.id}/mqdefault.jpg`,
   href: `https://music.youtube.com/watch?v=${song.id}&list=${PLAYLIST_ID}`,
 }));
+
+export type Song = (typeof favouriteSongs)[number];
