@@ -322,8 +322,8 @@ export default function Hero() {
               <LinkPreview href={ANCHORA_URL} image="/projects/anchora.webp" label="tryanchora.com">
                 Anchora
               </LinkPreview>
-              , an AI-native platform I'm building with a friend to make studying abroad easier. I handle everything
-              from product design to engineering. We're in closed beta, with{" "}
+              , an AI-native platform I'm building with a friend to make studying abroad more accessible and less
+              overwhelming. I handle everything from product design to engineering. We're in closed beta, with{" "}
               <strong>1,000+ people already on the waitlist</strong>.
             </p>
             <p className="-mt-2 mb-3">
