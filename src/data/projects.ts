@@ -1,4 +1,16 @@
-export const projects = [
+export type Project = {
+  name: string;
+  label: string;
+  href: string;
+  image: string;
+  status: "Live" | "Building";
+  pinned?: boolean;
+  // Four colours for the hover sunburst.
+  palette: string[];
+  description: string;
+};
+
+export const projects: Project[] = [
   {
     name: "Anchora",
     label: "Landing Page",

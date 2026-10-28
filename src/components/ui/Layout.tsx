@@ -1,9 +1,10 @@
-import { ArrowUpRight } from "lucide-react";
+import type { ComponentProps, ReactNode } from "react";
+import { ArrowUpRight, type LucideIcon } from "lucide-react";
 import { cn } from "../../lib/cn";
 import WordField from "./WordField";
 
 // The 780px column with dashed rails on both sides.
-export function Container({ children, className, ...props }) {
+export function Container({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div className={cn("rails relative mx-2 max-w-[780px] p-3 sm:mx-8 md:mx-auto", className)} {...props}>
       {children}
@@ -16,7 +17,7 @@ export function Hr() {
   return <div aria-hidden="true" className="dash-x h-px w-full" />;
 }
 
-export function SectionHeader({ id, children }) {
+export function SectionHeader({ id, children }: { id: string; children: ReactNode }) {
   return (
     <>
       {/* Extra room above each title separates sections without adding more rules. */}
@@ -31,7 +32,7 @@ export function SectionHeader({ id, children }) {
 }
 
 // Decorative band of drifting words, running edge to edge with no rails around it.
-export function DotBand({ seed }) {
+export function DotBand({ seed }: { seed: number }) {
   return (
     <div className="py-3">
       <WordField seed={seed} />
@@ -40,7 +41,15 @@ export function DotBand({ seed }) {
 }
 
 // The light, double-bordered pill used for "View all" and similar actions.
-export function FramedButton({ href, children, external = true, icon: Icon = ArrowUpRight, className }) {
+type FramedButtonProps = {
+  href: string;
+  children: ReactNode;
+  external?: boolean;
+  icon?: LucideIcon | null;
+  className?: string;
+};
+
+export function FramedButton({ href, children, external = true, icon: Icon = ArrowUpRight, className }: FramedButtonProps) {
   return (
     <a
       href={href}
@@ -55,7 +64,7 @@ export function FramedButton({ href, children, external = true, icon: Icon = Arr
   );
 }
 
-export function ViewAll({ href }) {
+export function ViewAll({ href }: { href: string }) {
   return (
     <>
       <Container className="px-2 py-5">

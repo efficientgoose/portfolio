@@ -1,4 +1,4 @@
-let ctx;
+let ctx: AudioContext | undefined;
 
 // Site-wide mute, remembered across visits. Every sound here checks it, and the song player
 // subscribes so muting also stops a playing preview.
@@ -8,11 +8,11 @@ try {
 } catch {
   // Storage can be blocked; start unmuted.
 }
-const listeners = new Set();
+const listeners = new Set<() => void>();
 
 export const isMuted = () => muted;
 
-export function setMuted(next) {
+export function setMuted(next: boolean) {
   muted = next;
   try {
     localStorage.setItem("muted", next ? "1" : "0");
@@ -22,13 +22,15 @@ export function setMuted(next) {
   listeners.forEach((fn) => fn());
 }
 
-export function subscribeMuted(fn) {
+export function subscribeMuted(fn: () => void) {
   listeners.add(fn);
-  return () => listeners.delete(fn);
+  return () => {
+    listeners.delete(fn);
+  };
 }
 
 function audio() {
-  ctx ??= new (window.AudioContext || window.webkitAudioContext)();
+  ctx ??= new (window.AudioContext || window.webkitAudioContext!)();
   if (ctx.state === "suspended") ctx.resume();
   return ctx;
 }

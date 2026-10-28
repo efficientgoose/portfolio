@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { cn } from "../../lib/cn";
 import { Container, Hr } from "../ui/Layout";
 
-const links = [
+type NavLink = { href: string; label: string; external?: boolean };
+
+const links: NavLink[] = [
   { href: "#about", label: "about" },
   { href: "#projects", label: "projects" },
   { href: "#experience", label: "experience" },

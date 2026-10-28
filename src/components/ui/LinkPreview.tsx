@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { playPreviewSound } from "../../lib/sound";
 
 const CARD_WIDTH = 248;
@@ -9,9 +9,11 @@ const SHOWS_CARD = "(min-width: 640px) and (hover: hover)"; // same breakpoint t
 
 // An inline link that, on hover or keyboard focus, floats a small framed screenshot of the site
 // above it. Phones and touch screens skip the card and just follow the link.
-export default function LinkPreview({ href, image, label, children }) {
-  const linkRef = useRef(null);
-  const cardRef = useRef(null);
+type LinkPreviewProps = { href: string; image: string; label: string; children: ReactNode };
+
+export default function LinkPreview({ href, image, label, children }: LinkPreviewProps) {
+  const linkRef = useRef<HTMLAnchorElement>(null);
+  const cardRef = useRef<HTMLSpanElement>(null);
   const [open, setOpen] = useState(false);
   const [place, setPlace] = useState({ shift: 0, below: false });
 

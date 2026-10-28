@@ -13,8 +13,8 @@ export default function Portfolio() {
   // One soft click for every button and link on the page. Controls with their own sound
   // (photo shuffle, song previews) opt out with `data-own-sound`.
   useEffect(() => {
-    const onClick = (e) => {
-      const target = e.target.closest("button, a, [role='button']");
+    const onClick = (e: MouseEvent) => {
+      const target = (e.target as Element).closest("button, a, [role='button']");
       if (target && !target.hasAttribute("data-own-sound")) playClickSound();
     };
     document.addEventListener("click", onClick, true);
