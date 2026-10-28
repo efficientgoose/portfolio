@@ -1,6 +1,6 @@
 import { experiences } from "./data/timeline";
 import { projects } from "./data/projects";
-import { skills } from "./data/techStack";
+import { skillGroups, skills } from "./data/techStack";
 import { ANCHORA_URL, EMAIL, GITHUB_URL, LINKEDIN_URL } from "./data/links";
 
 // Machine-readable descriptions of the site for search engines and AI tools, built from the same
@@ -55,7 +55,7 @@ export function llmsTxt() {
     "",
     "## Skills",
     "",
-    skills.map((skill) => skill.name).join(", "),
+    ...skillGroups.map((group) => `- ${group.title}: ${group.skills.map((skill) => skill.name).join(", ")}`),
     "",
     "## Links",
     "",

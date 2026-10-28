@@ -313,15 +313,18 @@ export default function Hero() {
       <div className="relative">
         <Container className="pb-8 pt-3 sm:pb-10 sm:pt-4">
           <div className="flex flex-col gap-3 leading-[1.6]">
-            <p>Hey, I'm Ajinkya.</p>
             <p>
-              I'm the co-founder of{" "}
+              Hey, I'm Ajinkya. I like building things from scratch and spending way too much time on the little
+              details.
+            </p>
+            <p>
+              I'm now going all in on{" "}
               <LinkPreview href={ANCHORA_URL} image="/projects/anchora.webp" label="tryanchora.com">
                 Anchora
               </LinkPreview>
-              , a study-abroad consultancy in your pocket, where I design and build its core systems, including
-              Atlas, our AI agent. It's in closed beta, with <strong>1,700+ university programs</strong> already
-              indexed and the agent guiding students from shortlisting to visa prep.
+              , an AI-native platform I'm building with a friend to make studying abroad easier. I handle everything
+              from product design to engineering. We're in closed beta, with{" "}
+              <strong>1,000+ people already on the waitlist</strong>.
             </p>
             <p className="-mt-2 mb-3">
               Want in?{" "}
