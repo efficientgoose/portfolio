@@ -5,7 +5,11 @@ import { readFile, rm, writeFile } from "node:fs/promises";
 const { render, personJsonLd, llmsTxt } = await import("../dist-ssr/entry-server.js");
 
 // Icons are mostly long SVG paths that tell a crawler nothing; drop them to keep the HTML small.
-const body = render().replace(/<svg[\s\S]*?<\/svg>/g, "");
+// React emits the page as one huge line, which some page readers (e.g. ChatGPT's) truncate or skip,
+// so break the line after each block-level element. Whitespace between blocks doesn't render.
+const body = render()
+  .replace(/<svg[\s\S]*?<\/svg>/g, "")
+  .replace(/(<\/(?:p|h[1-6]|li|ul|div|section|header|nav|main|figure|blockquote)>)/g, "$1\n");
 
 // JSON inside <script> must not contain "</script>"; escaping "<" rules that out.
 const jsonLd = JSON.stringify(personJsonLd()).replace(/</g, "\\u003c");
