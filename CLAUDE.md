@@ -12,7 +12,7 @@ The design is modelled on **rinkitadhana.com**: a calm, minimal, single 690px co
 
 ```bash
 npm run dev       # Vite dev server (localhost:5173)
-npm run build     # type-check (tsc -b) + production build; run before calling a task done
+npm run build     # type-check, production build, then pre-render; run before calling a task done
 npm run typecheck # type-check only
 npm run lint      # eslint .
 ```
@@ -37,6 +37,7 @@ Vite + React 19 + Tailwind CSS 3, TypeScript (strict), no router. Deployed on Ve
 - `src/data/` holds all content: `timeline.ts` (experience), `projects.ts`, `techStack.ts`, `links.ts` (email, GitHub, LinkedIn, résumé, Anchora URLs). Change copy here, not in components.
 - `src/lib/sound.ts` synthesises UI sounds with Web Audio (the shared button click, TV-static glitch). There are no audio files.
 - `index.html` sets the theme before paint (dark unless a saved choice says otherwise) and holds SEO meta.
+- **Pre-rendering for crawlers:** `npm run build` also renders the page to static HTML (`src/entry-server.tsx`, then `scripts/prerender.js`), so crawlers that don't run JavaScript (most AI crawlers) can read it. It injects that HTML into `#root` (SVG icons stripped), adds a schema.org Person JSON-LD block, and writes `dist/llms.txt`; both are built from `src/data/` in `src/seo.ts`. Visitors never see the static copy: `index.html` adds a `js` class that hides it, and `main.tsx` clears it before React mounts (no hydration). Code that runs during render must not touch `window`/`document` without a `typeof` guard, or the build fails. The word bands are left out of the static HTML so they don't read as keyword stuffing.
 
 ## Design system
 

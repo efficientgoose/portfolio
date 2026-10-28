@@ -41,12 +41,18 @@
     />
 
     <script>
+      // Marks that JavaScript runs, so the build-time copy of the page in #root stays hidden until
+      // React replaces it (crawlers and no-JS visitors still read it).
+      document.documentElement.classList.add("js");
       // Dark by default; a saved choice wins. Runs before paint to avoid a theme flash.
       try {
         var saved = localStorage.getItem("theme");
         if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
       } catch (e) {}
     </script>
+    <style>
+      .js [data-prerendered] { display: none; }
+    </style>
     <title>Ajinkya Kale</title>
   </head>
   <body>
