@@ -9,7 +9,10 @@ const MAX_STEP_MS = 34;
 // First-load reveal, as on rinkitadhana.com: a dot grows into a circle, then the circle
 // opens like a lens and fades as it grows until the page underneath fills the screen.
 export default function Loader() {
-  const [done, setDone] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  // Skipped when pre-rendering at build time (no window): the reveal is a client-side effect.
+  const [done, setDone] = useState(
+    () => typeof window === "undefined" || window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

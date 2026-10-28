@@ -49,7 +49,7 @@ function MailFilled({ className }: { className?: string }) {
 }
 
 function ThemeToggle() {
-  const [theme, setTheme] = useState(() => document.documentElement.dataset.theme || "dark");
+  const [theme, setTheme] = useState(() => (typeof document === "undefined" ? "dark" : document.documentElement.dataset.theme || "dark"));
   const switching = useRef(false);
 
   const toggle = () => {
@@ -88,7 +88,7 @@ function ThemeToggle() {
 // Mutes every sound on the site and remembers the choice. Unmuting plays the click so you hear it
 // come back; muting stays silent.
 function MuteToggle() {
-  const muted = useSyncExternalStore(subscribeMuted, isMuted);
+  const muted = useSyncExternalStore(subscribeMuted, isMuted, () => false);
 
   const toggle = () => {
     setMuted(!muted);

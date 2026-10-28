@@ -242,7 +242,8 @@ export default function WordField({ seed = 7, className = "" }: { seed?: number;
       onMouseLeave={() => (pointer.current = null)}
       className={`relative w-full select-none overflow-hidden ${className}`}
     >
-      <Rows rows={rows} />
+      {/* Left out of the build-time HTML: a thousand repeated keywords would read as stuffing to crawlers. */}
+      {typeof window !== "undefined" && <Rows rows={rows} />}
     </div>
   );
 }
