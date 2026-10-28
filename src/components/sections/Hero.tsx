@@ -318,7 +318,7 @@ export default function Hero() {
               details.
             </p>
             <p>
-              I'm now going all in on{" "}
+              Lately, I've been going all in on{" "}
               <LinkPreview href={ANCHORA_URL} image="/projects/anchora.webp" label="tryanchora.com">
                 Anchora
               </LinkPreview>
