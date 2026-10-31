@@ -3,7 +3,9 @@ import { ArrowUpRight } from "lucide-react";
 import { SiGithub } from "react-icons/si";
 import { GITHUB_URL, GITHUB_USER } from "../../data/links";
 
-const API = `https://github-contributions-api.jogruber.de/v4/${GITHUB_USER}?y=last`;
+// Our own function (GitHub GraphQL, ~5 min fresh); the third-party API (~1 h behind) is the fallback.
+const API = "/api/github";
+const FALLBACK_API = `https://github-contributions-api.jogruber.de/v4/${GITHUB_USER}?y=last`;
 // History starts on this date; the calendar runs from its week up to today.
 const START_DATE = "2026-07-15";
 const DAY_LABELS = ["", "Mon", "", "Wed", "", "Fri", ""];
@@ -59,8 +61,10 @@ export default function GitHubGraph() {
 
   useEffect(() => {
     const controller = new AbortController();
-    fetch(API, { signal: controller.signal })
-      .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
+    const load = (url: string) =>
+      fetch(url, { signal: controller.signal }).then((res) => (res.ok ? res.json() : Promise.reject(res.status)));
+    load(API)
+      .catch((err) => (err?.name === "AbortError" ? Promise.reject(err) : load(FALLBACK_API)))
       .then(setData)
       .catch((err) => err?.name !== "AbortError" && setFailed(true));
     return () => controller.abort();

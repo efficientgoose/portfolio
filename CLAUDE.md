@@ -31,7 +31,7 @@ Vite + React 19 + Tailwind CSS 3, TypeScript (strict), no router. Deployed on Ve
 - `src/types.d.ts` holds ambient types: `window.webkitAudioContext` and CSS custom properties (`--shift`, `--bar`) in inline styles.
 - Content types (`Project`, `Experience`, `Song`) live next to the data in `src/data/`.
 - `src/App.tsx` composes the page in order: `Navigation`, `Hero`, `Projects`, `Experience`, `Skills`, `Contact`, then `BackToTop` and `Loader` overlays.
-- `src/components/sections/` holds one component per section. `GitHubGraph.tsx` fetches live contributions from `github-contributions-api.jogruber.de` and renders nothing if the request fails.
+- `src/components/sections/` holds one component per section. `GitHubGraph.tsx` fetches contributions from `api/github.ts` (GitHub GraphQL API, needs a `GITHUB_TOKEN` env var: a fine-grained token with no extra permissions; cached on Vercel's CDN for 5 minutes). If that fails it falls back to `github-contributions-api.jogruber.de` (about an hour behind), and renders nothing if both fail.
 - `src/components/ui/Layout.tsx` holds the layout primitives: `Container` (the 690px railed column), `Hr` (full-width dashed rule), `SectionHeader`, `DotBand` (renders the full-width `WordField`), `FramedButton` and `ViewAll`. Build new sections from these.
 - `src/components/ui/` also has `WordField` (drifting word bands), `Loader` (first-load reveal), `RotatingRole` (subtitle cycling), and `BackToTop`.
 - `src/data/` holds all content: `timeline.ts` (experience), `projects.ts`, `techStack.ts`, `links.ts` (email, GitHub, LinkedIn, résumé, Anchora URLs). Change copy here, not in components.
