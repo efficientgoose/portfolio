@@ -3,6 +3,18 @@ import { Eye } from "lucide-react";
 
 const format = new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 2 });
 
+// One request per page load, shared by every copy of the count on the page (the hero renders one for
+// phones and one for larger screens), so a visit is counted once.
+let request: Promise<number | null> | undefined;
+
+function loadViews() {
+  request ??= fetch("/api/views", { method: "POST" })
+    .then((res) => (res.ok ? res.json() : null))
+    .then((data) => (typeof data?.views === "number" ? data.views : null))
+    .catch(() => null);
+  return request;
+}
+
 // Total portfolio views, like the page-view count on rinkitadhana.com. Each page load counts one
 // view via /api/views (a Vercel Function backed by Upstash Redis). Hidden if the count can't load,
 // e.g. under plain `vite dev`, which doesn't serve /api.
@@ -10,12 +22,13 @@ export default function ViewCount() {
   const [views, setViews] = useState<number | null>(null);
 
   useEffect(() => {
-    const controller = new AbortController();
-    fetch("/api/views", { method: "POST", signal: controller.signal })
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => typeof data?.views === "number" && setViews(data.views))
-      .catch(() => {});
-    return () => controller.abort();
+    let mounted = true;
+    loadViews().then((count) => {
+      if (mounted && count !== null) setViews(count);
+    });
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   if (views === null) return null;

@@ -3,6 +3,9 @@ export type Project = {
   label: string;
   href: string;
   image: string;
+  // Optional smaller versions of the screenshot, so phones don't download the full-size one.
+  srcSet?: string;
+  sizes?: string;
   status: "Live" | "Building";
   pinned?: boolean;
   // Four colours for the hover sunburst.
@@ -10,12 +13,23 @@ export type Project = {
   description: string;
 };
 
+// The Anchora landing-page screenshot at two widths. `sizes` is the width the featured card shows it
+// at; the hover preview on the Anchora link in the intro reuses all three values, so every device
+// downloads the screenshot once.
+export const ANCHORA_SHOT = {
+  src: "/projects/anchora.webp",
+  srcSet: "/projects/anchora-960.webp 960w, /projects/anchora.webp 1600w",
+  sizes: "(min-width: 780px) 578px, 68vw",
+};
+
 export const projects: Project[] = [
   {
     name: "Anchora",
     label: "Landing Page",
     href: "https://tryanchora.com",
-    image: "/projects/anchora.webp",
+    image: ANCHORA_SHOT.src,
+    srcSet: ANCHORA_SHOT.srcSet,
+    sizes: ANCHORA_SHOT.sizes,
     status: "Building",
     pinned: true,
     // Hover sunburst in Anchora's golds.
