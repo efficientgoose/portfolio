@@ -1,22 +1,23 @@
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { playPreviewSound } from "../../lib/sound";
+import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { cn } from "../../lib/cn";
 
 const CARD_WIDTH = 248;
 const EDGE = 16; // keep the card this far from the viewport edges
 const NAV_CLEARANCE = 72; // flip below the link when the sticky nav would cover the card
-const REVEAL_DELAY = 80; // matches the card's transition delay in index.css
-const SHOWS_CARD = "(min-width: 640px) and (hover: hover)"; // same breakpoint that un-hides the card
 
-// An inline link that, on hover or keyboard focus, floats a small framed screenshot of the site
-// above it. Phones and touch screens skip the card and just follow the link.
+// An inline link that, on hover or keyboard focus, floats a small framed card above it: a screenshot
+// of the site (`image`), or custom content (`card`, which is told whether the card is open). With
+// neither, it is a plain link. Phones and touch screens skip the card and just follow the link.
 type LinkPreviewProps = {
   href: string;
-  image: { src: string; srcSet?: string; sizes?: string };
+  image?: { src: string; srcSet?: string; sizes?: string };
+  card?: (open: boolean) => ReactNode;
   label: string;
+  linkClassName?: string;
   children: ReactNode;
 };
 
-export default function LinkPreview({ href, image, label, children }: LinkPreviewProps) {
+export default function LinkPreview({ href, image, card, label, linkClassName = "font-bold", children }: LinkPreviewProps) {
   const linkRef = useRef<HTMLAnchorElement>(null);
   const cardRef = useRef<HTMLSpanElement>(null);
   const [open, setOpen] = useState(false);
@@ -36,14 +37,6 @@ export default function LinkPreview({ href, image, label, children }: LinkPrevie
     });
   }, [open]);
 
-  // Pop as the card appears. Waiting out the reveal delay keeps a passing cursor silent, and
-  // phones, which never show the card, never hear it.
-  useEffect(() => {
-    if (!open || !window.matchMedia(SHOWS_CARD).matches) return;
-    const timer = setTimeout(playPreviewSound, REVEAL_DELAY);
-    return () => clearTimeout(timer);
-  }, [open]);
-
   return (
     <span className="relative inline-block" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
       <a
@@ -53,11 +46,15 @@ export default function LinkPreview({ href, image, label, children }: LinkPrevie
         rel="noopener noreferrer"
         onFocus={() => setOpen(true)}
         onBlur={() => setOpen(false)}
-        className="font-bold text-strong underline decoration-[color:var(--muted)] decoration-1 underline-offset-[5px] transition-colors duration-200 hover:text-spot hover:decoration-[color:var(--spot)] focus-visible:text-spot focus-visible:decoration-[color:var(--spot)]"
+        className={cn(
+          "text-strong underline decoration-[color:var(--muted)] decoration-1 underline-offset-[5px] transition-colors duration-200 hover:text-spot hover:decoration-[color:var(--spot)] focus-visible:text-spot focus-visible:decoration-[color:var(--spot)]",
+          linkClassName,
+        )}
       >
         {children}
       </a>
 
+      {(image || card) && (
       <span
         ref={cardRef}
         aria-hidden="true"
@@ -68,16 +65,21 @@ export default function LinkPreview({ href, image, label, children }: LinkPrevie
       >
         {/* Lazy, so phones (where the card is never shown) don't download the screenshot, and nothing
             fetches it before the page's script. On desktop it still loads up front, ready for a hover. */}
-        <img
-          {...image}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          draggable="false"
-          className="block aspect-video w-full select-none rounded-[8px] object-cover object-top"
-        />
+        {card
+          ? card(open)
+          : image && (
+              <img
+                {...image}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                draggable="false"
+                className="block aspect-video w-full select-none rounded-[8px] object-cover object-top"
+              />
+            )}
         <span className="block px-1.5 pb-[5px] pt-[6px] text-[11.5px] leading-none text-muted-foreground">{label}</span>
       </span>
+      )}
     </span>
   );
 }
