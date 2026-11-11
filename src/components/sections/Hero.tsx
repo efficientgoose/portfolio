@@ -10,8 +10,9 @@ import ViewCount from "../ui/ViewCount";
 import SongsOnRepeat from "./SongsOnRepeat";
 import RotatingRole from "../ui/RotatingRole";
 import LinkPreview from "../ui/LinkPreview";
+import { WaitlistFigure, WaitlistLink } from "../ui/WaitlistCount";
 import { isMuted, playClickSound, playGlitchSound, setMuted, subscribeMuted } from "../../lib/sound";
-import { ANCHORA_URL, ANCHORA_WAITLIST_URL, CAL_LINK, EMAIL, GITHUB_URL, LINKEDIN_URL } from "../../data/links";
+import { ANCHORA_URL, CAL_LINK, EMAIL, GITHUB_URL, LINKEDIN_URL } from "../../data/links";
 import { ANCHORA_SHOT } from "../../data/projects";
 
 // A click on the avatar swaps between these.
@@ -349,24 +350,14 @@ export default function Hero() {
               </LinkPreview>
               , an AI-native platform I'm building with a friend to make studying abroad more accessible and less
               overwhelming. I handle everything from product design to engineering. We're in closed beta, with{" "}
-              <strong>1,000+ people already on the waitlist</strong>.
+              <strong>
+                <WaitlistFigure /> people already on the waitlist
+              </strong>
+              .
             </p>
             <p className="-mt-2 mb-3">
               Want in?{" "}
-              <a
-                href={ANCHORA_WAITLIST_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group whitespace-nowrap font-medium text-strong underline decoration-[color:var(--muted)] decoration-1 underline-offset-[5px] transition-colors duration-200 hover:text-spot hover:decoration-[color:var(--spot)] focus-visible:text-spot focus-visible:decoration-[color:var(--spot)]"
-              >
-                Grab a spot on the waitlist
-                <span
-                  aria-hidden="true"
-                  className="ml-1 inline-block transition-transform duration-200 group-hover:translate-x-0.5 group-focus-visible:translate-x-0.5"
-                >
-                  →
-                </span>
-              </a>
+              <WaitlistLink />
             </p>
             <p>
               I'm also a backend engineer at <strong>Fleetx</strong>, where I work on real-time systems processing{" "}
