@@ -9,7 +9,12 @@ const SHOWS_CARD = "(min-width: 640px) and (hover: hover)"; // same breakpoint t
 
 // An inline link that, on hover or keyboard focus, floats a small framed screenshot of the site
 // above it. Phones and touch screens skip the card and just follow the link.
-type LinkPreviewProps = { href: string; image: string; label: string; children: ReactNode };
+type LinkPreviewProps = {
+  href: string;
+  image: { src: string; srcSet?: string; sizes?: string };
+  label: string;
+  children: ReactNode;
+};
 
 export default function LinkPreview({ href, image, label, children }: LinkPreviewProps) {
   const linkRef = useRef<HTMLAnchorElement>(null);
@@ -61,9 +66,13 @@ export default function LinkPreview({ href, image, label, children }: LinkPrevie
         style={{ width: CARD_WIDTH, "--shift": `${place.shift}px` }}
         className="link-preview pointer-events-none absolute left-1/2 z-40 hidden rounded-[11px] border border-border bg-background p-[3px] sm:[@media(hover:hover)]:block"
       >
+        {/* Lazy, so phones (where the card is never shown) don't download the screenshot, and nothing
+            fetches it before the page's script. On desktop it still loads up front, ready for a hover. */}
         <img
-          src={image}
+          {...image}
           alt=""
+          loading="lazy"
+          decoding="async"
           draggable="false"
           className="block aspect-video w-full select-none rounded-[8px] object-cover object-top"
         />

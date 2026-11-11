@@ -12,6 +12,7 @@ import RotatingRole from "../ui/RotatingRole";
 import LinkPreview from "../ui/LinkPreview";
 import { isMuted, playClickSound, playGlitchSound, setMuted, subscribeMuted } from "../../lib/sound";
 import { ANCHORA_URL, ANCHORA_WAITLIST_URL, CAL_LINK, EMAIL, GITHUB_URL, LINKEDIN_URL } from "../../data/links";
+import { ANCHORA_SHOT } from "../../data/projects";
 
 // A click on the avatar swaps between these.
 const photos = [
@@ -110,44 +111,66 @@ function MuteToggle() {
   );
 }
 
-// Load Cal.com's embed once and style its pop-up to match the site (dark, gold accent).
-function useCalPopup() {
-  useEffect(() => {
-    let cancelled = false;
-    getCalApi({ namespace: "coffee" })
-      .then((cal) => {
-        if (cancelled) return;
-        cal("ui", {
-          theme: "dark",
-          hideEventTypeDetails: false,
-          layout: "month_view",
-          cssVarsPerTheme: { dark: { "cal-brand": "#d9b562" }, light: { "cal-brand": "#b7791f" } },
-        });
-      })
-      .catch(() => {
-        // If the embed script can't load, the button simply does nothing; the email CTA still works.
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+// Cal.com's booking pop-up. Its embed script (about 100 kB, plus a timer that keeps running) is only
+// fetched once someone shows intent to book: hovering, focusing or touching the button. A click then
+// opens the pop-up, styled to match the site (dark, gold accent). Calls made before the script
+// arrives are queued by the embed and run in order, so a fast first click still opens it.
+let calApi: ReturnType<typeof getCalApi> | undefined;
+
+function loadCal() {
+  calApi ??= getCalApi({ namespace: "coffee" }).then((cal) => {
+    cal("ui", {
+      theme: "dark",
+      hideEventTypeDetails: false,
+      layout: "month_view",
+      cssVarsPerTheme: { dark: { "cal-brand": "#d9b562" }, light: { "cal-brand": "#b7791f" } },
+    });
+    return cal;
+  });
+  return calApi;
 }
 
+function openCal() {
+  loadCal()
+    .then((cal) => cal("modal", { calLink: CAL_LINK, config: { layout: "month_view", theme: "dark" } }))
+    .catch(() => {
+      // If the embed can't load, the button simply does nothing; the email CTA still works.
+    });
+}
+
+// Fetch and decode the photos once, so the mid-glitch swap never lands on a blank frame.
+let warmedPhotos: HTMLImageElement[] | undefined;
+
+function warmPhotos() {
+  warmedPhotos ??= photos.map(({ src }) => {
+    const img = new Image();
+    img.src = src;
+    img.decode?.().catch(() => {});
+    return img;
+  });
+}
+
+const PHOTO_WARMUP_MS = 1000;
+
 export default function Hero() {
-  useCalPopup();
   const [photo, setPhoto] = useState(0);
   const [glitching, setGlitching] = useState(false);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
-  const preloaded = useRef<HTMLImageElement[]>([]);
 
-  // Fetch and decode the other photos up front so the mid-glitch swap never lands on a blank frame.
+  // The other photos are only needed once the avatar is clicked, so they wait until the page has
+  // finished loading instead of competing with the first screen. Hovering the avatar fetches them
+  // straight away.
   useEffect(() => {
-    preloaded.current = photos.map(({ src }) => {
-      const img = new Image();
-      img.src = src;
-      img.decode?.().catch(() => {});
-      return img;
-    });
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const later = () => {
+      timer = setTimeout(warmPhotos, PHOTO_WARMUP_MS);
+    };
+    if (document.readyState === "complete") later();
+    else window.addEventListener("load", later, { once: true });
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("load", later);
+    };
   }, []);
 
   // Glitch for ~300ms in sound and picture, swapping to a different random photo partway through.
@@ -184,6 +207,8 @@ export default function Hero() {
               <button
                 type="button"
                 onClick={shuffle}
+                onPointerEnter={warmPhotos}
+                onFocus={warmPhotos}
                 data-own-sound
                 aria-label="Shuffle photo"
                 className="cursor-pointer rounded-[12px] border border-border p-[4px] transition duration-300 hover:brightness-90"
@@ -319,7 +344,7 @@ export default function Hero() {
             </p>
             <p>
               Lately, I've been going all in on{" "}
-              <LinkPreview href={ANCHORA_URL} image="/projects/anchora.webp" label="tryanchora.com">
+              <LinkPreview href={ANCHORA_URL} image={ANCHORA_SHOT} label="tryanchora.com">
                 Anchora
               </LinkPreview>
               , an AI-native platform I'm building with a friend to make studying abroad more accessible and less
@@ -351,12 +376,12 @@ export default function Hero() {
           </div>
 
           <div className="flex flex-wrap select-none justify-center gap-3 pt-8 sm:pt-10">
-            {/* Opens the Cal.com booking page as a pop-up over the site (wired in useCalPopup). */}
+            {/* Opens the Cal.com booking page as a pop-up over the site (see loadCal and openCal). */}
             <button
               type="button"
-              data-cal-namespace="coffee"
-              data-cal-link={CAL_LINK}
-              data-cal-config='{"layout":"month_view","theme":"dark"}'
+              onClick={openCal}
+              onPointerEnter={loadCal}
+              onFocus={loadCal}
               className="group flex w-fit items-center gap-1.5 overflow-hidden rounded-[9px] bg-strong px-4 py-2.5 text-sm font-medium text-background"
             >
               {/* On hover the outline calendar drops out and a filled one drops in from above. */}

@@ -20,7 +20,7 @@ function ExperienceRow({ job, defaultOpen }: { job: Job; defaultOpen: boolean })
       >
         <span className="flex min-w-0 flex-1 items-center gap-3">
           <span className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-[10px] border border-border bg-background p-[2px] sm:size-12">
-            <img src={job.logo} alt="" draggable="false" className="h-full w-full rounded-[8px] border border-border bg-white object-contain p-1" />
+            <img src={job.logo} alt="" loading="lazy" decoding="async" draggable="false" className="h-full w-full rounded-[8px] border border-border bg-white object-contain p-1" />
           </span>
           <span className="flex min-w-0 flex-col items-start gap-1">
             <span className="flex flex-wrap items-center gap-2">

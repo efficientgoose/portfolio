@@ -39,4 +39,13 @@ function vercelFunctions(): Plugin {
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), vercelFunctions()],
+  build: {
+    rollupOptions: {
+      output: {
+        // React and the icon libraries go in their own file. It only changes when dependencies do,
+        // so returning visitors keep it cached across deploys and re-download just the site's code.
+        manualChunks: (id) => (id.includes("node_modules") ? "vendor" : undefined),
+      },
+    },
+  },
 })

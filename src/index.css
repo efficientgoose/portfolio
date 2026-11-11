@@ -2,11 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
+/* All fonts are self-hosted from src/assets/fonts, so the build gives them hashed names that can be
+   cached forever, and no visitor has to connect to Google Fonts. index.html preloads the two used on
+   the first screen. The Figtree and Caveat files and their unicode ranges are the ones Google serves. */
+@font-face {
+  font-family: "Figtree";
+  font-style: normal;
+  font-weight: 300 900;
+  font-display: swap;
+  src: url("./assets/fonts/figtree-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Figtree";
+  font-style: normal;
+  font-weight: 300 900;
+  font-display: swap;
+  src: url("./assets/fonts/figtree-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Figtree";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./assets/fonts/figtree-italic-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Figtree";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./assets/fonts/figtree-italic-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Caveat";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./assets/fonts/caveat-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Geist Mono cut down to what the site uses: regular weight, Latin characters (11 kB instead of
+   58 kB). The full variable font is still in public/fonts for the OG image script. */
 @font-face {
   font-family: "Geist Mono";
-  src: url("/fonts/GeistMono-Variable.woff2") format("woff2");
-  font-weight: 100 900;
+  font-style: normal;
+  font-weight: 400;
   font-display: swap;
+  src: url("./assets/fonts/geist-mono-latin.woff2") format("woff2");
 }
 
 /* Tokens follow rinkitadhana.com, with the dark canvas lifted slightly to a soft black. */
@@ -242,28 +298,40 @@ body {
 
 /* First-load reveal: a dot grows into a circle, then the circle widens like a lens and fades as it
    grows. One radius drives both the disc and the curtain's hole, so the page only ever shows inside
-   the circle and its edge keeps moving outward until it leaves the screen. */
+   the circle and its edge keeps moving outward until it leaves the screen.
+   It runs in two parts so the wait for the script is spent on the loader instead of a blank screen:
+   the dot grows into the circle as soon as the page paints (the markup is in index.html), and the
+   circle opens once React has rendered the page underneath (Loader.tsx adds .is-opening). Together
+   the two parts are the original single 1.5s animation, cut at the full circle. */
 @property --loader-r {
   syntax: "<length>";
   inherits: true;
   initial-value: 0px;
 }
 
-@keyframes loader-radius {
+@keyframes loader-grow {
   0% { --loader-r: 0px; }
-  12% { --loader-r: 2.5px; }
-  40% { --loader-r: 50px; }
-  46% { --loader-r: 47px; }
+  30% { --loader-r: 2.5px; }
+  100% { --loader-r: 50px; }
+}
+
+@keyframes loader-open {
+  0% { --loader-r: 50px; }
+  10% { --loader-r: 47px; }
   100% { --loader-r: 75vmax; }
 }
 
 @keyframes loader-disc-fade {
-  0%, 46% { opacity: 1; animation-timing-function: cubic-bezier(0.3, 0, 0.5, 1); }
-  82%, 100% { opacity: 0; }
+  0%, 10% { opacity: 1; animation-timing-function: cubic-bezier(0.3, 0, 0.5, 1); }
+  70%, 100% { opacity: 0; }
 }
 
 .loader {
-  animation: loader-radius 1500ms cubic-bezier(0.7, 0, 0.3, 1) forwards;
+  animation: loader-grow 600ms cubic-bezier(0.7, 0, 0.3, 1) forwards;
+}
+
+.loader.is-opening {
+  animation: loader-open 900ms cubic-bezier(0.7, 0, 0.3, 1) forwards;
 }
 
 .loader-curtain {
@@ -275,7 +343,10 @@ body {
   width: calc(var(--loader-r) * 2);
   height: calc(var(--loader-r) * 2);
   background: var(--loader-disc);
-  animation: loader-disc-fade 1500ms linear forwards;
+}
+
+.loader.is-opening .loader-disc {
+  animation: loader-disc-fade 900ms linear forwards;
 }
 
 /* Word-field rows slide sideways forever; each row holds two copies, so -50% lands on an identical frame. */

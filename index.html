@@ -2,7 +2,8 @@
 <html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/favicon.png?v=2" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png?v=2" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="dark" />
@@ -33,12 +34,10 @@
     <meta name="twitter:image:alt"
       content="Ajinkya Kale, Backend Engineer and Co-Founder of Anchora. Real-time systems at Fleetx; building Anchora, a study-abroad planner." />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Figtree:ital,wght@0,400;0,500;0,600;0,700;1,700&display=swap"
-      rel="stylesheet"
-    />
+    <!-- The two fonts on the first screen (body text; nav and word bands), fetched alongside the
+         script so text is already in its final font when the loader opens. See src/index.css. -->
+    <link rel="preload" as="font" type="font/woff2" href="/src/assets/fonts/figtree-latin.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/src/assets/fonts/geist-mono-latin.woff2" crossorigin />
 
     <script>
       // Marks that JavaScript runs, so the build-time copy of the page in #root stays hidden until
@@ -52,11 +51,23 @@
     </script>
     <style>
       .js [data-prerendered] { display: none; }
+      /* The first-load reveal only shows where the script will run and motion is allowed. */
+      #loader { display: none; }
+      .js #loader { display: block; }
+      @media (prefers-reduced-motion: reduce) {
+        .js #loader { display: none; }
+      }
     </style>
     <title>Ajinkya Kale</title>
   </head>
   <body>
     <div id="root"></div>
+    <!-- First-load reveal. It is here rather than in React so the dot can start growing while the
+         script downloads; Loader.tsx opens it once the page has rendered, then removes it. -->
+    <div id="loader" aria-hidden="true" class="loader pointer-events-auto fixed inset-0 z-[100]">
+      <div class="loader-curtain absolute inset-0 bg-background"></div>
+      <div class="loader-disc absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"></div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

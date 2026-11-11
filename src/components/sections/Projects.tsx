@@ -119,6 +119,8 @@ function ProjectCard({ project, wide }: { project: Project; wide?: boolean }) {
               <div className="h-full w-full overflow-hidden rounded-t-[4px]">
                 <img
                   src={project.image}
+                  srcSet={project.srcSet}
+                  sizes={project.sizes}
                   alt={`${project.name} screenshot`}
                   loading="lazy"
                   decoding="async"

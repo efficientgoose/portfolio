@@ -14,7 +14,7 @@ export const experiences: Experience[] = [
   {
     company: "Anchora",
     href: "https://tryanchora.com",
-    logo: "/logos/anchora.svg",
+    logo: "/logos/anchora.webp",
     role: "Co-Founder, Product & Engineering",
     type: "Founder",
     period: "Jul 2026 – Present",

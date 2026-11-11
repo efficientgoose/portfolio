@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 
-const TOTAL_MS = 1500;
+const OPEN_MS = 900;
 // Longest step one frame may advance the reveal. On a cold first load the browser can stall for
 // hundreds of ms (GPU start-up, image decodes, fonts); capping the step pauses the reveal through a
 // stall instead of letting it jump ahead, so it always plays in full.
@@ -8,51 +8,62 @@ const MAX_STEP_MS = 34;
 
 // First-load reveal, as on rinkitadhana.com: a dot grows into a circle, then the circle
 // opens like a lens and fades as it grows until the page underneath fills the screen.
+// The curtain itself is plain markup in index.html (#loader), so the dot starts growing as soon as
+// the page paints, while the script is still downloading. This component runs the second half: once
+// the page has rendered and the circle is full, it opens the lens, then removes the curtain.
 export default function Loader() {
-  // Skipped when pre-rendering at build time (no window): the reveal is a client-side effect.
-  const [done, setDone] = useState(
-    () => typeof window === "undefined" || window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-  );
-  const ref = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    if (done) return;
+    const loader = document.getElementById("loader");
+    if (!loader) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      loader.remove();
+      return;
+    }
+
     const { overflow } = document.documentElement.style;
     document.documentElement.style.overflow = "hidden";
-
-    // The CSS keyframes define the look; this loop drives their clock one painted frame at a time.
-    const animations = ref.current?.getAnimations?.({ subtree: true }) ?? [];
+    let cancelled = false;
     let frame = 0;
     let timer: ReturnType<typeof setTimeout> | undefined;
-    if (animations.length) {
+
+    const finish = () => {
+      loader.remove();
+      document.documentElement.style.overflow = overflow;
+    };
+
+    const open = () => {
+      if (cancelled) return;
+      loader.classList.add("is-opening");
+      // The CSS keyframes define the look; this loop drives their clock one painted frame at a time.
+      const animations = loader.getAnimations?.({ subtree: true }) ?? [];
+      if (!animations.length) {
+        timer = setTimeout(finish, OPEN_MS);
+        return;
+      }
       animations.forEach((a) => a.pause());
       let elapsed = 0;
       let last: number | null = null;
       const tick = (now: number) => {
-        if (last !== null) elapsed = Math.min(TOTAL_MS, elapsed + Math.min(now - last, MAX_STEP_MS));
+        if (last !== null) elapsed = Math.min(OPEN_MS, elapsed + Math.min(now - last, MAX_STEP_MS));
         last = now;
         animations.forEach((a) => (a.currentTime = elapsed));
-        if (elapsed >= TOTAL_MS) setDone(true);
+        if (elapsed >= OPEN_MS) finish();
         else frame = requestAnimationFrame(tick);
       };
       frame = requestAnimationFrame(tick);
-    } else {
-      timer = setTimeout(() => setDone(true), TOTAL_MS);
-    }
+    };
+
+    // Let the dot finish growing into the circle first; on a slow connection it already has.
+    const growing = loader.getAnimations?.() ?? [];
+    Promise.all(growing.map((a) => a.finished)).then(open, open);
 
     return () => {
+      cancelled = true;
       cancelAnimationFrame(frame);
       clearTimeout(timer);
       document.documentElement.style.overflow = overflow;
     };
-  }, [done]);
+  }, []);
 
-  if (done) return null;
-
-  return (
-    <div ref={ref} aria-hidden="true" className="loader pointer-events-auto fixed inset-0 z-[100]">
-      <div className="loader-curtain absolute inset-0 bg-background" />
-      <div className="loader-disc absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full" />
-    </div>
-  );
+  return null;
 }
