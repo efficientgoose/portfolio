@@ -119,46 +119,44 @@ export default function GitHubGraph() {
         </a>
       </div>
 
-      {/* Calendar with the stats beside it on desktop (spanning its height, behind a hairline), below it on phones. */}
-      <div className="flex select-none flex-col gap-5 sm:flex-row sm:items-stretch sm:gap-8">
-        <div ref={boxRef} className="relative w-fit text-xs" onMouseLeave={() => setHover(null)}>
-          <div className="mb-1.5 ml-8 flex gap-[4px] text-muted-foreground">
-            {months.map((m, i) => (
-              <span key={i} className="w-[16px] whitespace-nowrap sm:w-[18px]">
-                {m}
-              </span>
-            ))}
-          </div>
+      {/* Desktop: the stats sit just right of the calendar behind a hairline, spanning its height. Phones: stats below. */}
+      <div className="flex select-none flex-col gap-5 sm:flex-row sm:items-stretch sm:gap-12">
+        <div ref={boxRef} className="relative min-w-0 text-xs" onMouseLeave={() => setHover(null)}>
+          {/* Cells are 22px and only shrink once the weeks no longer fit beside the stats. */}
           <div
-            className="flex gap-[4px]"
+            className="grid gap-[4px]"
+            style={{ gridTemplateColumns: `2rem repeat(${columns.length}, minmax(0, 22px))` }}
             role="img"
             aria-label={
               loading ? "Loading GitHub contributions" : `${stats.total} GitHub contributions since 15 July 2026`
             }
           >
-            <div className="mr-1 flex w-7 flex-col gap-[4px] text-muted-foreground">
-              {DAY_LABELS.map((d, i) => (
-                <span key={i} className="h-[16px] leading-[16px] sm:h-[18px] sm:leading-[18px]">
-                  {d}
-                </span>
-              ))}
-            </div>
-            {columns.map((week, w) => (
-              <div key={w} className="flex flex-col gap-[4px]">
-                {week.map((day, d) => (
+            <span />
+            {months.map((m, i) => (
+              <span key={i} className="mb-0.5 whitespace-nowrap text-muted-foreground">
+                {m}
+              </span>
+            ))}
+            {DAY_LABELS.map((label, d) => [
+              <span key={`l${d}`} className="flex items-center text-muted-foreground">
+                {label}
+              </span>,
+              ...columns.map((week, w) => {
+                const day = week[d];
+                return (
                   <div
                     key={day?.date ?? `${w}-${d}`}
                     onMouseEnter={day ? (e) => showTooltip(day, e.currentTarget) : undefined}
-                    className={`size-[16px] rounded-[3px] sm:size-[18px] ${loading ? "animate-pulse" : ""}`}
+                    className={`aspect-square rounded-[3px] ${loading ? "animate-pulse" : ""}`}
                     style={{
                       background: day ? `var(--heat-${day.level})` : loading ? "var(--heat-0)" : "transparent",
                       outline: day && hover?.day === day ? "1px solid var(--muted-foreground)" : "none",
                       outlineOffset: 1,
                     }}
                   />
-                ))}
-              </div>
-            ))}
+                );
+              }),
+            ])}
           </div>
 
           {hover && (
@@ -187,11 +185,13 @@ export default function GitHubGraph() {
           href={GITHUB_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="grid grid-cols-3 gap-4 border-t border-border pt-4 sm:flex sm:flex-col sm:justify-between sm:border-l sm:border-t-0 sm:py-5 sm:pl-8 sm:pt-5"
+          className="border-t border-border pt-4 sm:flex sm:shrink-0 sm:border-l sm:border-t-0 sm:py-5 sm:pl-8 sm:pt-5"
         >
-          <Stat value={loading ? "—" : stats.total.toLocaleString("en-IN")} label="contributions" />
-          <Stat value={loading ? "—" : stats.active} label="active days" />
-          <Stat value={loading ? "—" : `${stats.longest} days`} label="longest streak" />
+          <div className="grid grid-cols-3 gap-4 sm:flex sm:shrink-0 sm:flex-col sm:justify-between sm:whitespace-nowrap">
+            <Stat value={loading ? "—" : stats.total.toLocaleString("en-IN")} label="contributions" />
+            <Stat value={loading ? "—" : stats.active} label="active days" />
+            <Stat value={loading ? "—" : `${stats.longest} days`} label="longest streak" />
+          </div>
         </a>
       </div>
     </div>
